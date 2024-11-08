@@ -4,7 +4,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { userDb } from 'src/db/userDb';
+import { userDb } from 'src/db/db';
 import { ReturnedUser } from './user.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { isUUID } from 'class-validator';
@@ -13,14 +13,15 @@ import { UpdatePasswordDto } from './dto/update-password.dto';
 @Injectable()
 export class UserService {
   getUsers(): ReturnedUser[] {
-    return userDb.map(({ password, ...user }) => user);
+    const users = [...userDb.values()];
+    return users.map(({ password, ...user }) => user);
   }
 
   getUserById(id: string): ReturnedUser {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid user ID');
     }
-    const foundUser = userDb.find((user) => user.id === id);
+    const foundUser = userDb.get(id);
     if (!foundUser) {
       throw new NotFoundException("User with specified ID hasn't been found");
     }
@@ -29,10 +30,11 @@ export class UserService {
   }
 
   createUser(createUserDto: CreateUserDto): ReturnedUser {
-    const isUserAlreadyRegistered = userDb.find(
+    const isUserAlreadyRegistered = [...userDb.values()].map(
       (user) => user.login === createUserDto.login,
     );
-    if (isUserAlreadyRegistered) {
+    console.log(isUserAlreadyRegistered);
+    if (isUserAlreadyRegistered.length !== 0) {
       throw new BadRequestException('User has already been registered');
     }
 
@@ -44,7 +46,10 @@ export class UserService {
       updatedAt: Date.now(),
     };
 
-    userDb.push({ ...createdUser, password: createUserDto.password });
+    userDb.set(createdUser.id, {
+      ...createdUser,
+      password: createUserDto.password,
+    });
 
     return createdUser;
   }
@@ -53,7 +58,7 @@ export class UserService {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid user ID');
     }
-    const foundUser = userDb.find((user) => user.id === id);
+    const foundUser = userDb.get(id);
     if (!foundUser) {
       throw new NotFoundException("User with specified ID hasn't been found");
     }
@@ -67,5 +72,18 @@ export class UserService {
 
     const { password, ...returnedUser } = foundUser;
     return returnedUser;
+  }
+
+  deleteUser(id: string) {
+    if (!isUUID(id, 4)) {
+      throw new BadRequestException('Please enter valid user ID');
+    }
+    const foundUser = userDb.get(id);
+    if (!foundUser) {
+      throw new NotFoundException("User with specified ID hasn't been found");
+    }
+
+    userDb.delete(id);
+    return 'User has been deleted';
   }
 }
