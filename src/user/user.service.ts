@@ -69,6 +69,7 @@ export class UserService {
 
     foundUser.password = updatePasswordDto.newPassword;
     foundUser.updatedAt = Date.now();
+    foundUser.version += 1;
 
     const { password, ...returnedUser } = foundUser;
     return returnedUser;

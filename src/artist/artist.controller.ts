@@ -8,8 +8,8 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Artist } from './author.interface';
-import { ArtistService } from './author.service';
+import { Artist } from './artist.interface';
+import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 
 @Controller('artist')

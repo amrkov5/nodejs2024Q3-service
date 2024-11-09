@@ -4,9 +4,9 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { artistDb } from 'src/db/db';
+import { albumDb, artistDb, trackDb } from 'src/db/db';
 import { isUUID } from 'class-validator';
-import { Artist } from './author.interface';
+import { Artist } from './artist.interface';
 import { CreateArtistDto } from './dto/create-artist.dto';
 
 @Injectable()
@@ -27,12 +27,12 @@ export class ArtistService {
   }
 
   createArtist(createArtistDto: CreateArtistDto): Artist {
-    const isArtistAlreadyAdded = [...artistDb.values()].map(
-      (artist) => artist.name === createArtistDto.name,
-    );
-    if (isArtistAlreadyAdded.length !== 0) {
-      throw new BadRequestException('Artist has already been added');
-    }
+    // const isArtistAlreadyAdded = [...artistDb.values()].map(
+    //   (artist) => artist.name === createArtistDto.name,
+    // );
+    // if (isArtistAlreadyAdded.length !== 0) {
+    //   throw new BadRequestException('Artist has already been added');
+    // }
 
     const createdArtist = {
       id: crypto.randomUUID(),
@@ -69,7 +69,20 @@ export class ArtistService {
       throw new NotFoundException("Artist with specified ID hasn't been found");
     }
 
+    [...albumDb.values()].forEach((album) => {
+      if (album.artistId === id) {
+        album.artistId = null;
+      }
+    });
+
+    [...trackDb.values()].forEach((track) => {
+      if (track.artistId === id) {
+        track.artistId = null;
+      }
+    });
+
     artistDb.delete(id);
-    return 'Artist has been deleted';
+
+    return;
   }
 }
