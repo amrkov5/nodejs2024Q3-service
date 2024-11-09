@@ -14,31 +14,31 @@ import { CreateAlbumDto } from './dto/create-Album.dto';
 
 @Controller('album')
 export class AlbumController {
-  constructor(private readonly AlbumService: AlbumService) {}
+  constructor(private readonly albumService: AlbumService) {}
 
   @Get()
   getAlbums(): Album[] {
-    return this.AlbumService.getAlbums();
+    return this.albumService.getAlbums();
   }
 
   @Get(':id')
   getAlbumById(@Param('id') id: string): Album {
-    return this.AlbumService.getAlbumById(id);
+    return this.albumService.getAlbumById(id);
   }
 
   @Post()
   createAlbum(@Body() createAlbumDto: CreateAlbumDto) {
-    return this.AlbumService.createAlbum(createAlbumDto);
+    return this.albumService.createAlbum(createAlbumDto);
   }
 
   @Put(':id')
   changeAlbum(@Body() createAlbumDto: CreateAlbumDto, @Param('id') id: string) {
-    return this.AlbumService.updateAlbum(createAlbumDto, id);
+    return this.albumService.updateAlbum(createAlbumDto, id);
   }
 
   @Delete(':id')
   @HttpCode(204)
   deleteUser(@Param('id') id: string) {
-    return this.AlbumService.deleteAlbum(id);
+    return this.albumService.deleteAlbum(id);
   }
 }

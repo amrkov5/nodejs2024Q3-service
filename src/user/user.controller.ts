@@ -9,7 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ReturnedUser, User } from './user.interface';
+import { ReturnedUser } from './user.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 
