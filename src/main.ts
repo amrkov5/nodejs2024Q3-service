@@ -21,8 +21,8 @@ async function bootstrap() {
   const port = configService.get<string>('PORT', '4000');
 
   const config = new DocumentBuilder()
-    .setTitle('API Documentation')
-    .setDescription('API documentation for the application')
+    .setTitle('Home music library API Documentation')
+    .setDescription('API documentation for the Home music library application')
     .setVersion('1.0')
     .build();
 

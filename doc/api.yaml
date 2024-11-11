@@ -7,9 +7,9 @@ paths:
       parameters: []
       responses:
         '200':
-          description: User found and returned successfully.
+          description: Users returned successfully.
       tags: &ref_0
-        - user
+        - User instance
     post:
       operationId: UserController_createUser
       summary: Create new user
@@ -38,10 +38,10 @@ paths:
           schema:
             type: string
       responses:
-        '40':
-          description: ID is invalid.
         '200':
           description: User found and returned successfully.
+        '400':
+          description: ID is invalid.
         '404':
           description: User not found.
       tags: *ref_0
@@ -81,12 +81,6 @@ paths:
           description: User ID
           schema:
             type: string
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UpdatePasswordDto'
       responses:
         '204':
           description: The user was deleted successfully.
@@ -98,12 +92,16 @@ paths:
   /artist:
     get:
       operationId: ArtistController_getArtists
+      summary: Get all artists
       parameters: []
       responses:
         '200':
-          description: ''
+          description: All artists returned successfully.
+      tags: &ref_1
+        - Artist instance
     post:
       operationId: ArtistController_createArtist
+      summary: Create a new artist
       parameters: []
       requestBody:
         required: true
@@ -112,26 +110,38 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateArtistDto'
       responses:
-        '201':
-          description: ''
+        '200':
+          description: Artist created successfully.
+        '400':
+          description: Body is invalid.
+      tags: *ref_1
   /artist/{id}:
     get:
       operationId: ArtistController_getArtistById
+      summary: Get artist by ID
       parameters:
         - name: id
           required: true
           in: path
+          description: Artist ID
           schema:
             type: string
       responses:
         '200':
-          description: ''
+          description: Artist found and returned successfully.
+        '400':
+          description: Artist ID is invalid.
+        '404':
+          description: Artist not found.
+      tags: *ref_1
     put:
       operationId: ArtistController_changeArtist
+      summary: Change artist data
       parameters:
         - name: id
           required: true
           in: path
+          description: Artist ID
           schema:
             type: string
       requestBody:
@@ -142,27 +152,41 @@ paths:
               $ref: '#/components/schemas/CreateArtistDto'
       responses:
         '200':
-          description: ''
+          description: Artist changed successfully.
+        '400':
+          description: Artist ID is invalid.
+        '404':
+          description: Artist not found.
+      tags: *ref_1
     delete:
       operationId: ArtistController_deleteUser
+      summary: Delete artist
       parameters:
         - name: id
           required: true
           in: path
+          description: Artist ID
           schema:
             type: string
       responses:
-        '204':
-          description: ''
+        '200':
+          description: Artist deleted successfully.
+        '404':
+          description: Artist not found.
+      tags: *ref_1
   /track:
     get:
       operationId: TrackController_getTracks
+      summary: Get all tracks
       parameters: []
       responses:
         '200':
-          description: ''
+          description: Track returned successfully.
+      tags: &ref_2
+        - Track instance
     post:
       operationId: TrackController_createTrack
+      summary: Add a new track to the library
       parameters: []
       requestBody:
         required: true
@@ -172,25 +196,37 @@ paths:
               $ref: '#/components/schemas/CreateTrackDto'
       responses:
         '201':
-          description: ''
+          description: Track created successfully.
+        '400':
+          description: Body is invalid.
+      tags: *ref_2
   /track/{id}:
     get:
       operationId: TrackController_getTrackById
+      summary: Get track by ID
       parameters:
         - name: id
           required: true
           in: path
+          description: Track ID
           schema:
             type: string
       responses:
         '200':
-          description: ''
+          description: Track found and returned successfully.
+        '400':
+          description: Track ID is invalid.
+        '404':
+          description: Track not found.
+      tags: *ref_2
     put:
       operationId: TrackController_changeTrack
+      summary: Change track data
       parameters:
         - name: id
           required: true
           in: path
+          description: Track ID
           schema:
             type: string
       requestBody:
@@ -201,27 +237,43 @@ paths:
               $ref: '#/components/schemas/CreateTrackDto'
       responses:
         '200':
-          description: ''
+          description: Track changed successfully.
+        '400':
+          description: Track ID is invalid.
+        '404':
+          description: Track not found.
+      tags: *ref_2
     delete:
       operationId: TrackController_deleteUser
+      summary: Delete track from the library
       parameters:
         - name: id
           required: true
           in: path
+          description: Track ID
           schema:
             type: string
       responses:
         '204':
-          description: ''
+          description: Track deleted successfully.
+        '400':
+          description: Track ID is invalid.
+        '404':
+          description: Track not found.
+      tags: *ref_2
   /album:
     get:
       operationId: AlbumController_getAlbums
+      summary: Change track data
       parameters: []
       responses:
         '200':
-          description: ''
+          description: Albums returned successfully.
+      tags: &ref_3
+        - Album instance
     post:
       operationId: AlbumController_createAlbum
+      summary: Create a new album
       parameters: []
       requestBody:
         required: true
@@ -230,26 +282,38 @@ paths:
             schema:
               $ref: '#/components/schemas/CreateAlbumDto'
       responses:
-        '201':
-          description: ''
+        '200':
+          description: Album created successfully.
+        '400':
+          description: Body is invalid.
+      tags: *ref_3
   /album/{id}:
     get:
       operationId: AlbumController_getAlbumById
+      summary: Get album by ID
       parameters:
         - name: id
           required: true
           in: path
+          description: Album ID
           schema:
             type: string
       responses:
         '200':
-          description: ''
+          description: Album found and returned successfully.
+        '400':
+          description: Album ID is invalid.
+        '404':
+          description: Album not found.
+      tags: *ref_3
     put:
       operationId: AlbumController_changeAlbum
+      summary: Change album data
       parameters:
         - name: id
           required: true
           in: path
+          description: Track ID
           schema:
             type: string
       requestBody:
@@ -260,61 +324,92 @@ paths:
               $ref: '#/components/schemas/CreateAlbumDto'
       responses:
         '200':
-          description: ''
+          description: Album changed successfully.
+        '400':
+          description: Album ID is invalid.
+        '404':
+          description: Album not found.
+      tags: *ref_3
     delete:
       operationId: AlbumController_deleteUser
+      summary: Delete album
       parameters:
         - name: id
           required: true
           in: path
+          description: Track ID
           schema:
             type: string
       responses:
         '204':
-          description: ''
+          description: Album deleted successfully.
+        '400':
+          description: Album ID is invalid.
+        '404':
+          description: Album not found.
+      tags: *ref_3
   /favs:
     get:
       operationId: FavoritesController_getFavorites
+      summary: Get favorites
       parameters: []
       responses:
         '200':
-          description: ''
+          description: Favorites returned successfully.
+      tags: &ref_4
+        - Favorites instance
   /favs/{instance}/{id}:
     post:
       operationId: FavoritesController_addToFavorites
+      summary: Add track/artist/album to favorites
       parameters:
         - name: instance
           required: true
           in: path
+          description: Type of entity to add to favorites
           schema:
             type: string
         - name: id
           required: true
           in: path
+          description: ID
           schema:
             type: string
       responses:
         '201':
-          description: ''
+          description: Entity added to favorites successfully.
+        '400':
+          description: Entity ID is invalid.
+        '422':
+          description: Entity to add was not found.
+      tags: *ref_4
     delete:
       operationId: FavoritesController_deleteFromFavorites
+      summary: Remove track/artist/album from favorites
       parameters:
         - name: instance
           required: true
           in: path
+          description: Type of entity to remove from favorites
           schema:
             type: string
         - name: id
           required: true
           in: path
+          description: Entity ID
           schema:
             type: string
       responses:
         '204':
-          description: ''
+          description: Entity removed from favorites successfully.
+        '400':
+          description: Entity ID is invalid.
+        '404':
+          description: Entity is not in favorites.
+      tags: *ref_4
 info:
-  title: API Documentation
-  description: API documentation for the application
+  title: Home music library API Documentation
+  description: API documentation for the Home music library application
   version: '1.0'
   contact: {}
 tags: []
@@ -341,20 +436,68 @@ components:
         oldPassword:
           type: string
           description: The old user's password
-          example: testUser
+          example: passwordOld
         newPassword:
           type: string
           description: The new user's password
-          example: testUser
+          example: passwordNew
       required:
         - oldPassword
         - newPassword
     CreateArtistDto:
       type: object
-      properties: {}
+      properties:
+        name:
+          type: string
+          description: The name of the artist
+          example: testArtist
+        grammy:
+          type: boolean
+          description: Does the artist have Grammy
+          example: true
+      required:
+        - name
+        - grammy
     CreateTrackDto:
       type: object
-      properties: {}
+      properties:
+        name:
+          type: string
+          description: The name of the track
+          example: testTrack
+        artistId:
+          type: string
+          description: ID of the artist
+          example: 506da2d4-2f9d-4e45-bf22-d654c17f0008
+        albumId:
+          type: string
+          description: ID of the album
+          example: 506da2d4-2f9d-4e45-bf22-d654c17f0008
+        duration:
+          type: number
+          description: Duration of the track in seconds
+          example: 356
+      required:
+        - name
+        - artistId
+        - albumId
+        - duration
     CreateAlbumDto:
       type: object
-      properties: {}
+      properties:
+        name:
+          type: string
+          description: The name of the album
+          example: testAlbum
+        artistId:
+          type: string
+          description: The ID of the artist
+          example: 506da2d4-2f9d-4e45-bf22-d654c17f0008
+        year:
+          type: number
+          description: Album year
+          example: 1998
+      required:
+        - name
+        - artistId
+        - year

@@ -5,7 +5,7 @@ export class UpdatePasswordDto {
   @ApiProperty({
     description: "The old user's password",
     type: String,
-    example: 'testUser',
+    example: 'passwordOld',
   })
   @IsDefined()
   @IsString()
@@ -15,7 +15,7 @@ export class UpdatePasswordDto {
   @ApiProperty({
     description: "The new user's password",
     type: String,
-    example: 'testUser',
+    example: 'passwordNew',
   })
   @IsDefined()
   @IsString()

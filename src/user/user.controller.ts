@@ -20,7 +20,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
-@ApiTags('user')
+@ApiTags('User instance')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
@@ -29,7 +29,7 @@ export class UserController {
   @ApiOperation({ summary: 'Get all users' })
   @ApiResponse({
     status: 200,
-    description: 'User found and returned successfully.',
+    description: 'Users returned successfully.',
   })
   getUsers(): ReturnedUser[] {
     return this.userService.getUsers();
@@ -42,7 +42,7 @@ export class UserController {
     status: 200,
     description: 'User found and returned successfully.',
   })
-  @ApiResponse({ status: 40, description: 'ID is invalid.' })
+  @ApiResponse({ status: 400, description: 'ID is invalid.' })
   @ApiResponse({ status: 404, description: 'User not found.' })
   getUserById(@Param('id') id: string): ReturnedUser {
     return this.userService.getUserById(id);
@@ -87,7 +87,6 @@ export class UserController {
   @Delete(':id')
   @ApiOperation({ summary: "Update user's password" })
   @ApiParam({ name: 'id', type: String, description: 'User ID' })
-  @ApiBody({ type: UpdatePasswordDto })
   @ApiResponse({
     status: 204,
     description: 'The user was deleted successfully.',
