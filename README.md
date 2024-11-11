@@ -67,7 +67,7 @@ npm run format
 
 ### Using Swagger to work with the API
 
-<http://localhost:4000/doc/>
+<http://localhost:4000/api/>
 
 ## Endpoints
 
