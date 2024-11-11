@@ -9,7 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { ReturnedUser } from './user.interface';
+import { ReturnedUser, ReturnedUserClass } from './user.interface';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import {
@@ -30,6 +30,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Users returned successfully.',
+    type: [ReturnedUserClass],
   })
   getUsers(): ReturnedUser[] {
     return this.userService.getUsers();
@@ -41,6 +42,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'User found and returned successfully.',
+    type: ReturnedUserClass,
   })
   @ApiResponse({ status: 400, description: 'ID is invalid.' })
   @ApiResponse({ status: 404, description: 'User not found.' })
@@ -54,6 +56,7 @@ export class UserController {
   @ApiResponse({
     status: 201,
     description: 'User created successfully.',
+    type: ReturnedUserClass,
   })
   @ApiResponse({
     status: 400,
@@ -70,6 +73,7 @@ export class UserController {
   @ApiResponse({
     status: 200,
     description: 'Password updated successfully.',
+    type: ReturnedUserClass,
   })
   @ApiResponse({
     status: 400,

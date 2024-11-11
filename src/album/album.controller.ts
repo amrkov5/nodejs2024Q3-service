@@ -8,7 +8,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Album } from './album.interface';
+import { Album, AlbumClass } from './album.interface';
 import { AlbumService } from './album.service';
 import { CreateAlbumDto } from './dto/create-Album.dto';
 import {
@@ -29,6 +29,7 @@ export class AlbumController {
   @ApiResponse({
     status: 200,
     description: 'Albums returned successfully.',
+    type: [AlbumClass],
   })
   getAlbums(): Album[] {
     return this.albumService.getAlbums();
@@ -40,6 +41,7 @@ export class AlbumController {
   @ApiResponse({
     status: 200,
     description: 'Album found and returned successfully.',
+    type: AlbumClass,
   })
   @ApiResponse({ status: 400, description: 'Album ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Album not found.' })
@@ -53,6 +55,7 @@ export class AlbumController {
   @ApiResponse({
     status: 200,
     description: 'Album created successfully.',
+    type: AlbumClass,
   })
   @ApiResponse({ status: 400, description: 'Body is invalid.' })
   createAlbum(@Body() createAlbumDto: CreateAlbumDto) {
@@ -66,6 +69,7 @@ export class AlbumController {
   @ApiResponse({
     status: 200,
     description: 'Album changed successfully.',
+    type: AlbumClass,
   })
   @ApiResponse({ status: 400, description: 'Album ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Album not found.' })

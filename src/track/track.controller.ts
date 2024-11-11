@@ -9,7 +9,7 @@ import {
   Put,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
-import { Track } from './track.interface';
+import { Track, TrackClass } from './track.interface';
 import { CreateTrackDto } from './dto/create-track.dto';
 import {
   ApiBody,
@@ -29,6 +29,7 @@ export class TrackController {
   @ApiResponse({
     status: 200,
     description: 'Track returned successfully.',
+    type: [TrackClass],
   })
   getTracks(): Track[] {
     return this.trackService.getTracks();
@@ -40,6 +41,7 @@ export class TrackController {
   @ApiResponse({
     status: 200,
     description: 'Track found and returned successfully.',
+    type: TrackClass,
   })
   @ApiResponse({ status: 400, description: 'Track ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Track not found.' })
@@ -53,6 +55,7 @@ export class TrackController {
   @ApiResponse({
     status: 201,
     description: 'Track created successfully.',
+    type: TrackClass,
   })
   @ApiResponse({ status: 400, description: 'Body is invalid.' })
   createTrack(@Body() createTrackDto: CreateTrackDto) {
@@ -66,6 +69,7 @@ export class TrackController {
   @ApiResponse({
     status: 200,
     description: 'Track changed successfully.',
+    type: TrackClass,
   })
   @ApiResponse({ status: 400, description: 'Track ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Track not found.' })

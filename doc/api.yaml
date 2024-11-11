@@ -8,6 +8,12 @@ paths:
       responses:
         '200':
           description: Users returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReturnedUserClass'
       tags: &ref_0
         - User instance
     post:
@@ -23,6 +29,10 @@ paths:
       responses:
         '201':
           description: User created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnedUserClass'
         '400':
           description: Body is invalid.
       tags: *ref_0
@@ -40,6 +50,10 @@ paths:
       responses:
         '200':
           description: User found and returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnedUserClass'
         '400':
           description: ID is invalid.
         '404':
@@ -64,6 +78,10 @@ paths:
       responses:
         '200':
           description: Password updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnedUserClass'
         '400':
           description: Body is invalid.
         '403':
@@ -97,6 +115,12 @@ paths:
       responses:
         '200':
           description: All artists returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArtistClass'
       tags: &ref_1
         - Artist instance
     post:
@@ -112,6 +136,10 @@ paths:
       responses:
         '200':
           description: Artist created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtistClass'
         '400':
           description: Body is invalid.
       tags: *ref_1
@@ -129,6 +157,10 @@ paths:
       responses:
         '200':
           description: Artist found and returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtistClass'
         '400':
           description: Artist ID is invalid.
         '404':
@@ -153,6 +185,10 @@ paths:
       responses:
         '200':
           description: Artist changed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArtistClass'
         '400':
           description: Artist ID is invalid.
         '404':
@@ -182,6 +218,12 @@ paths:
       responses:
         '200':
           description: Track returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TrackClass'
       tags: &ref_2
         - Track instance
     post:
@@ -197,6 +239,10 @@ paths:
       responses:
         '201':
           description: Track created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackClass'
         '400':
           description: Body is invalid.
       tags: *ref_2
@@ -214,6 +260,10 @@ paths:
       responses:
         '200':
           description: Track found and returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackClass'
         '400':
           description: Track ID is invalid.
         '404':
@@ -238,6 +288,10 @@ paths:
       responses:
         '200':
           description: Track changed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackClass'
         '400':
           description: Track ID is invalid.
         '404':
@@ -269,6 +323,12 @@ paths:
       responses:
         '200':
           description: Albums returned successfully.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlbumClass'
       tags: &ref_3
         - Album instance
     post:
@@ -284,6 +344,10 @@ paths:
       responses:
         '200':
           description: Album created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumClass'
         '400':
           description: Body is invalid.
       tags: *ref_3
@@ -301,6 +365,10 @@ paths:
       responses:
         '200':
           description: Album found and returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumClass'
         '400':
           description: Album ID is invalid.
         '404':
@@ -325,6 +393,10 @@ paths:
       responses:
         '200':
           description: Album changed successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlbumClass'
         '400':
           description: Album ID is invalid.
         '404':
@@ -356,6 +428,10 @@ paths:
       responses:
         '200':
           description: Favorites returned successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoritesResponseClass'
       tags: &ref_4
         - Favorites instance
   /favs/{instance}/{id}:
@@ -378,6 +454,10 @@ paths:
       responses:
         '201':
           description: Entity added to favorites successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FavoritesResponseClass'
         '400':
           description: Entity ID is invalid.
         '422':
@@ -416,6 +496,36 @@ tags: []
 servers: []
 components:
   schemas:
+    ReturnedUserClass:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the user
+          format: uuid
+          example: 506da2d4-2f9d-4e45-bf22-d654c17f0008
+        login:
+          type: string
+          description: The login of the user
+          example: testUser
+        version:
+          type: number
+          description: The version of the user's account
+          example: 1
+        createAt:
+          type: number
+          description: Date of the account creation.
+          example: 1655000000
+        updateAt:
+          type: number
+          description: Date of the account modifying.
+          example: 1655000000
+      required:
+        - id
+        - login
+        - version
+        - createAt
+        - updateAt
     CreateUserDto:
       type: object
       properties:
@@ -444,6 +554,25 @@ components:
       required:
         - oldPassword
         - newPassword
+    ArtistClass:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the artist
+          example: 506da2d4-2f9d-4e45-bf22-d654c17f0008
+        name:
+          type: string
+          description: The name of the artist
+          example: testArtist
+        grammy:
+          type: boolean
+          description: Does the artist have Grammy
+          example: true
+      required:
+        - id
+        - name
+        - grammy
     CreateArtistDto:
       type: object
       properties:
@@ -458,6 +587,38 @@ components:
       required:
         - name
         - grammy
+    TrackClass:
+      type: object
+      properties:
+        id:
+          type: string
+          description: ID of the track
+          format: uuid
+          example: 506da2d4-2f9d-4e45-bf22-d654c17f0008
+        name:
+          type: string
+          description: The name of the track
+          example: testTrack
+        artistId:
+          type: string
+          description: ID of the artist
+          format: uuid
+          example: 506da2d4-2f9d-4e45-bf22-d654c17f0008
+        albumId:
+          type: string
+          description: ID of the album
+          format: uuid
+          example: 506da2d4-2f9d-4e45-bf22-d654c17f0008
+        duration:
+          type: number
+          description: Duration of the track in seconds
+          example: 356
+      required:
+        - id
+        - name
+        - artistId
+        - albumId
+        - duration
     CreateTrackDto:
       type: object
       properties:
@@ -482,6 +643,31 @@ components:
         - artistId
         - albumId
         - duration
+    AlbumClass:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Album ID
+          format: uuid
+          example: 506da2d4-2f9d-4e45-bf22-d654c17f0008
+        name:
+          type: string
+          description: The name of the album
+          example: testAlbum
+        year:
+          type: number
+          description: Album year
+          example: 1998
+        artistId:
+          type: string
+          description: The ID of the artist
+          example: 506da2d4-2f9d-4e45-bf22-d654c17f0008
+      required:
+        - id
+        - name
+        - year
+        - artistId
     CreateAlbumDto:
       type: object
       properties:
@@ -501,3 +687,22 @@ components:
         - name
         - artistId
         - year
+    FavoritesResponseClass:
+      type: object
+      properties:
+        artists:
+          type: array
+          items:
+            $ref: '#/components/schemas/ArtistClass'
+        albums:
+          type: array
+          items:
+            $ref: '#/components/schemas/AlbumClass'
+        tracks:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackClass'
+      required:
+        - artists
+        - albums
+        - tracks

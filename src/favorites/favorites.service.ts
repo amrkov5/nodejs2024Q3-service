@@ -87,22 +87,15 @@ export class FavoritesService {
 
     const idsIndexesToDelete: number[] = favoritesDb[instanceInFavs]
       .map((el: string, index: number) => {
-        console.log('index', index);
-        console.log('element', el);
-        console.log('id', id);
-        console.log(el === id);
         if (el === id) {
           return index;
         }
         return;
       })
       .filter((i: number) => i);
-    console.log(idsIndexesToDelete);
     idsIndexesToDelete.reverse().forEach((i) => {
       favoritesDb[instanceInFavs].splice(i, 1);
     });
-
-    console.log(this.getFavorites());
 
     return this.getFavorites();
   }

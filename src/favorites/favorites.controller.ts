@@ -1,6 +1,9 @@
 import { Controller, Delete, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
-import { FavoritesResponse } from './favorites.interface';
+import {
+  FavoritesResponse,
+  FavoritesResponseClass,
+} from './favorites.interface';
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Favorites instance')
@@ -13,6 +16,7 @@ export class FavoritesController {
   @ApiResponse({
     status: 200,
     description: 'Favorites returned successfully.',
+    type: FavoritesResponseClass,
   })
   getFavorites(): FavoritesResponse {
     return this.favoritesService.getFavorites();
@@ -29,6 +33,7 @@ export class FavoritesController {
   @ApiResponse({
     status: 201,
     description: 'Entity added to favorites successfully.',
+    type: FavoritesResponseClass,
   })
   @ApiResponse({ status: 400, description: 'Entity ID is invalid.' })
   @ApiResponse({ status: 422, description: 'Entity to add was not found.' })

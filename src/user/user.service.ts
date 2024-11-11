@@ -30,13 +30,12 @@ export class UserService {
   }
 
   createUser(createUserDto: CreateUserDto): ReturnedUser {
-    const isUserAlreadyRegistered = [...userDb.values()].map(
-      (user) => user.login === createUserDto.login,
-    );
-    console.log(isUserAlreadyRegistered);
-    if (isUserAlreadyRegistered.length !== 0) {
-      throw new BadRequestException('User has already been registered');
-    }
+    // const isUserAlreadyRegistered = [...userDb.values()].map(
+    //   (user) => user.login === createUserDto.login,
+    // );
+    // if (isUserAlreadyRegistered.length !== 0) {
+    //   throw new BadRequestException('User has already been registered');
+    // }
 
     const createdUser = {
       id: crypto.randomUUID(),

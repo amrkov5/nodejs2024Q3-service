@@ -8,7 +8,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { Artist } from './artist.interface';
+import { Artist, ArtistClass } from './artist.interface';
 import { ArtistService } from './artist.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import {
@@ -29,6 +29,7 @@ export class ArtistController {
   @ApiResponse({
     status: 200,
     description: 'All artists returned successfully.',
+    type: [ArtistClass],
   })
   getArtists(): Artist[] {
     return this.artistService.getArtists();
@@ -40,6 +41,7 @@ export class ArtistController {
   @ApiResponse({
     status: 200,
     description: 'Artist found and returned successfully.',
+    type: ArtistClass,
   })
   @ApiResponse({ status: 400, description: 'Artist ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Artist not found.' })
@@ -53,6 +55,7 @@ export class ArtistController {
   @ApiResponse({
     status: 200,
     description: 'Artist created successfully.',
+    type: ArtistClass,
   })
   @ApiResponse({ status: 400, description: 'Body is invalid.' })
   createArtist(@Body() createArtistDto: CreateArtistDto) {
@@ -66,6 +69,7 @@ export class ArtistController {
   @ApiResponse({
     status: 200,
     description: 'Artist changed successfully.',
+    type: ArtistClass,
   })
   @ApiResponse({ status: 400, description: 'Artist ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Artist not found.' })

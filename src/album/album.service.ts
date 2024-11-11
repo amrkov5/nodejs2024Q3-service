@@ -11,7 +11,6 @@ import { CreateAlbumDto } from './dto/create-Album.dto';
 @Injectable()
 export class AlbumService {
   getAlbums(): Album[] {
-    console.log('invoked', ...albumDb.values());
     return [...albumDb.values()];
   }
 
