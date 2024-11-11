@@ -73,6 +73,17 @@ npm run format
 
 **Users (/user)**
 
+```typescript
+interface User {
+  id: string; // uuid v4
+  login: string;
+  password: string;
+  version: number; // integer number, increments on update
+  createdAt: number; // timestamp of creation
+  updatedAt: number; // timestamp of last update
+}
+```
+
 | Method | Path      | Description          | Status Codes       |
 | ------ | --------- | -------------------- | ------------------ |
 | GET    | /user     | Get all users        | 200                |
@@ -82,6 +93,14 @@ npm run format
 | DELETE | /user/:id | Delete user          | 204, 400, 404      |
 
 **Artists (/artist)**
+
+```typescript
+interface Artist {
+  id: string; // uuid v4
+  name: string;
+  grammy: boolean;
+}
+```
 
 | Method | Path        | Description      | Status Codes  |
 | ------ | ----------- | ---------------- | ------------- |
@@ -93,6 +112,15 @@ npm run format
 
 **Albums (/album)**
 
+```typescript
+interface Album {
+  id: string; // uuid v4
+  name: string;
+  year: number;
+  artistId: string | null; // refers to Artist
+}
+```
+
 | Method | Path       | Description     | Status Codes  |
 | ------ | ---------- | --------------- | ------------- |
 | GET    | /album     | Get all albums  | 200           |
@@ -103,6 +131,16 @@ npm run format
 
 **Tracks (/track)**
 
+```typescript
+interface Track {
+  id: string; // uuid v4
+  name: string;
+  artistId: string | null; // refers to Artist
+  albumId: string | null; // refers to Album
+  duration: number; // integer number
+}
+```
+
 | Method | Path       | Description     | Status Codes  |
 | ------ | ---------- | --------------- | ------------- |
 | GET    | /track     | Get all tracks  | 200           |
@@ -112,6 +150,14 @@ npm run format
 | DELETE | /track/:id | Delete track    | 204, 400, 404 |
 
 **Favorites (/favs)**
+
+```typescript
+interface Favorites {
+  artists: string[]; // favorite artists ids
+  albums: string[]; // favorite albums ids
+  tracks: string[]; // favorite tracks ids
+}
+```
 
 | Method | Path             | Description                  | Status Codes  |
 | ------ | ---------------- | ---------------------------- | ------------- |
