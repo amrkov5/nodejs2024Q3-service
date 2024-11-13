@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { albumDb, trackDb } from 'src/db/db';
 import { isUUID } from 'class-validator';
-import { Album } from './Album.interface';
-import { CreateAlbumDto } from './dto/create-Album.dto';
+import { Album } from './album.interface';
+import { CreateAlbumDto } from './dto/create-album.dto';
 
 @Injectable()
 export class AlbumService {

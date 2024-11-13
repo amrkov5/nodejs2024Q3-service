@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { Album, AlbumClass } from './album.interface';
 import { AlbumService } from './album.service';
-import { CreateAlbumDto } from './dto/create-Album.dto';
+import { CreateAlbumDto } from './dto/create-album.dto';
 import {
   ApiBody,
   ApiOperation,

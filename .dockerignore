@@ -1,0 +1,10 @@
+./node_modules
+./dist
+./doc
+./test
+
+.env.*
+eslint.js
+.prettierrc
+jest.config.json
+README.md
