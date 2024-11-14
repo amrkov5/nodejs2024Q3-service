@@ -11,15 +11,16 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  // url      = env("DATABASE_MIGRATE_URL")
 }
 
 model User {
   id String @id @default(uuid())
   login String
   password String
-  version Int @default(autoincrement())
+  version Int @default(1)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  updatedAt DateTime @default(now())
 }
 
 model Artist {

@@ -8,6 +8,10 @@ COPY ./package*.json ./
 
 RUN npm install
 
+COPY ./prisma ./
+
+RUN npm run prisma:generate
+
 COPY . .
 
 RUN npm run build
@@ -20,8 +24,6 @@ ENV DATABASE_URL="postgresql://musicLover:libraryRSS@postgres:5432/library?schem
 
 WORKDIR /nodejs2024Q3-service
 
-# COPY --from=builder ./dist ./dist
-# COPY --from=builder ./node_modules ./node_modules
 COPY --from=builder /nodejs2024Q3-service/dist ./dist
 COPY --from=builder /nodejs2024Q3-service/node_modules ./node_modules
 

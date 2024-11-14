@@ -3,8 +3,12 @@ services:
     build:
       context: ..
       dockerfile: docker/DockerfileDb
+    # ports:
+    #   - '${DB_PORT}:${DB_PORT}'
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ../.env
     networks:
       - app-network
 
@@ -15,10 +19,12 @@ services:
     depends_on:
       - postgres
     ports:
-      - '${PORT}:${PORT}' # Связываем порт хоста с портом контейнера
+      - '${PORT}:${PORT}'
     environment:
-      # - DATABASE_URL=${DATABASE_URL}
+      - DATABASE_URL=${DATABASE_URL}
       - PORT=${PORT}
+    env_file:
+      - ../.env
     networks:
       - app-network
 

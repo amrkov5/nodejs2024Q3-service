@@ -32,7 +32,7 @@ export class UserController {
     description: 'Users returned successfully.',
     type: [ReturnedUserClass],
   })
-  getUsers(): ReturnedUser[] {
+  getUsers(): Promise<ReturnedUser[]> {
     return this.userService.getUsers();
   }
 
@@ -46,7 +46,7 @@ export class UserController {
   })
   @ApiResponse({ status: 400, description: 'ID is invalid.' })
   @ApiResponse({ status: 404, description: 'User not found.' })
-  getUserById(@Param('id') id: string): ReturnedUser {
+  getUserById(@Param('id') id: string): Promise<ReturnedUser> {
     return this.userService.getUserById(id);
   }
 
@@ -62,7 +62,7 @@ export class UserController {
     status: 400,
     description: 'Body is invalid.',
   })
-  createUser(@Body() createUserDto: CreateUserDto) {
+  createUser(@Body() createUserDto: CreateUserDto): Promise<ReturnedUser> {
     return this.userService.createUser(createUserDto);
   }
 
@@ -84,7 +84,7 @@ export class UserController {
   changePassword(
     @Body() updatePasswordDto: UpdatePasswordDto,
     @Param('id') id: string,
-  ) {
+  ): Promise<ReturnedUser> {
     return this.userService.updatePassword(updatePasswordDto, id);
   }
 
@@ -101,7 +101,7 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'User not found.' })
   @HttpCode(204)
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id') id: string): Promise<void> {
     return this.userService.deleteUser(id);
   }
 }
