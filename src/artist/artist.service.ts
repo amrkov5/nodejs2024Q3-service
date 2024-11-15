@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { albumDb, artistDb, trackDb } from 'src/db/db';
 import { isUUID } from 'class-validator';
 import { Artist } from './artist.interface';
 import { CreateArtistDto } from './dto/create-artist.dto';

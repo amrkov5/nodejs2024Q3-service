@@ -7,99 +7,67 @@ import { trackDb } from 'src/db/db';
 import { isUUID } from 'class-validator';
 import { Track } from './track.interface';
 import { CreateTrackDto } from './dto/create-track.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class TrackService {
-  getTracks(): Track[] {
-    return [...trackDb.values()];
+  constructor(private prisma: PrismaService) {}
+
+  async getTracks(): Promise<Track[]> {
+    const tracks = await this.prisma.track.findMany();
+    return tracks;
   }
 
-  getTrackById(id: string): Track {
+  async getTrackById(id: string): Promise<Track> {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid track ID.');
     }
-    const foundTrack = trackDb.get(id);
+    const foundTrack = await this.prisma.track.findUnique({ where: { id } });
     if (!foundTrack) {
       throw new NotFoundException("Track with specified ID hasn't been found.");
     }
     return foundTrack;
   }
 
-  createTrack(createTrackDto: CreateTrackDto): Track {
-    // const isTrackAlreadyAdded = [...trackDb.values()].map(
-    //   (track) => track === createTrackDto,
-    // );
-    // if (isTrackAlreadyAdded.length !== 0) {
-    //   throw new BadRequestException('Track has already been added.');
-    // }
-
-    // if (
-    //   ![...artistDb.values()].find(
-    //     (artist) => artist.id === createTrackDto.artistId,
-    //   )
-    // ) {
-    //   throw new BadRequestException(
-    //     'Artist not found. Please add artist first.',
-    //   );
-    // }
-
-    // if (
-    //   ![...albumDb.values()].find(
-    //     (album) => album.id === createTrackDto.albumId,
-    //   )
-    // ) {
-    //   throw new BadRequestException(
-    //     'Album not found. Please add artist first.',
-    //   );
-    // }
-
-    const createdTrack = {
-      id: crypto.randomUUID(),
-      ...createTrackDto,
-    };
-
-    trackDb.set(createdTrack.id, createdTrack);
+  async createTrack(createTrackDto: CreateTrackDto): Promise<Track> {
+    const createdTrack = await this.prisma.track.create({
+      data: createTrackDto,
+    });
 
     return createdTrack;
   }
 
-  updateTrack(createTrackDto: CreateTrackDto, id: string) {
+  async updateTrack(
+    createTrackDto: CreateTrackDto,
+    id: string,
+  ): Promise<Track> {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid Track ID.');
     }
-    const foundTrack = trackDb.get(id);
+    const foundTrack = await this.prisma.track.findUnique({ where: { id } });
     if (!foundTrack) {
       throw new NotFoundException("Track with specified ID hasn't been found.");
     }
 
-    // if (
-    //   ![...artistDb.values()].find(
-    //     (artist) => artist.id === createTrackDto.artistId,
-    //   )
-    // ) {
-    //   throw new BadRequestException(
-    //     'Artist not found. Please add artist first.',
-    //   );
-    // }
+    const updatedUser = await this.prisma.track.update({
+      where: { id },
+      data: createTrackDto,
+    });
 
-    foundTrack.name = createTrackDto.name;
-    foundTrack.albumId = createTrackDto.albumId;
-    foundTrack.artistId = createTrackDto.artistId;
-    foundTrack.duration = createTrackDto.duration;
-
-    return foundTrack;
+    return updatedUser;
   }
 
-  deleteTrack(id: string) {
+  async deleteTrack(id: string): Promise<void> {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid track ID.');
     }
-    const foundTrack = trackDb.get(id);
+    const foundTrack = await this.prisma.track.findUnique({ where: { id } });
     if (!foundTrack) {
       throw new NotFoundException("Track with specified ID hasn't been found.");
     }
 
-    trackDb.delete(id);
+    await this.prisma.track.delete({ where: { id } });
+
     return;
   }
 }

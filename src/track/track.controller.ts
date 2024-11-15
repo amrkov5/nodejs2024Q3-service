@@ -31,7 +31,7 @@ export class TrackController {
     description: 'Track returned successfully.',
     type: [TrackClass],
   })
-  getTracks(): Track[] {
+  getTracks(): Promise<Track[]> {
     return this.trackService.getTracks();
   }
 
@@ -45,7 +45,7 @@ export class TrackController {
   })
   @ApiResponse({ status: 400, description: 'Track ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Track not found.' })
-  getTrackById(@Param('id') id: string): Track {
+  getTrackById(@Param('id') id: string): Promise<Track> {
     return this.trackService.getTrackById(id);
   }
 
@@ -58,7 +58,7 @@ export class TrackController {
     type: TrackClass,
   })
   @ApiResponse({ status: 400, description: 'Body is invalid.' })
-  createTrack(@Body() createTrackDto: CreateTrackDto) {
+  createTrack(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
     return this.trackService.createTrack(createTrackDto);
   }
 
@@ -73,7 +73,10 @@ export class TrackController {
   })
   @ApiResponse({ status: 400, description: 'Track ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Track not found.' })
-  changeTrack(@Body() createTrackDto: CreateTrackDto, @Param('id') id: string) {
+  changeTrack(
+    @Body() createTrackDto: CreateTrackDto,
+    @Param('id') id: string,
+  ): Promise<Track> {
     return this.trackService.updateTrack(createTrackDto, id);
   }
 
@@ -87,7 +90,7 @@ export class TrackController {
   @ApiResponse({ status: 400, description: 'Track ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Track not found.' })
   @HttpCode(204)
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id') id: string): Promise<void> {
     return this.trackService.deleteTrack(id);
   }
 }
