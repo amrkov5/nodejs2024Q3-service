@@ -3,8 +3,8 @@ services:
     build:
       context: ..
       dockerfile: docker/DockerfileDb
-    # ports:
-    #   - '${DB_PORT}:${DB_PORT}'
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     env_file:

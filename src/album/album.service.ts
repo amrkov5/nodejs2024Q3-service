@@ -7,104 +7,90 @@ import { albumDb, trackDb } from 'src/db/db';
 import { isUUID } from 'class-validator';
 import { Album } from './album.interface';
 import { CreateAlbumDto } from './dto/create-album.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class AlbumService {
-  getAlbums(): Album[] {
-    return [...albumDb.values()];
+  constructor(private prisma: PrismaService) {}
+
+  async getAlbums(): Promise<Album[]> {
+    const albums = await this.prisma.album.findMany();
+    return albums;
   }
 
-  getAlbumById(id: string): Album {
+  async getAlbumById(id: string): Promise<Album> {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid album ID.');
     }
-    const foundAlbum = albumDb.get(id);
+    const foundAlbum = await this.prisma.album.findUnique({
+      where: {
+        id,
+      },
+    });
     if (!foundAlbum) {
       throw new NotFoundException("Album with specified ID hasn't been found.");
     }
     return foundAlbum;
   }
 
-  createAlbum(createAlbumDto: CreateAlbumDto): Album {
-    // const isAlbumAlreadyAdded = [...albumDb.values()].filter((album) => {
-    //   const { id, ...albumWithoutId } = album;
-    //   const objToCheck = {
-    //     artistId: createAlbumDto.artistId ? createAlbumDto.artistId : null,
-    //     ...createAlbumDto,
-    //   };
-    //   if (JSON.stringify(albumWithoutId) === JSON.stringify(objToCheck)) {
-    //     return album;
-    //   }
-    // });
-    // if (isAlbumAlreadyAdded.length !== 0) {
-    //   throw new BadRequestException('Album has already been added.');
-    // }
-
-    // if (
-    //   createAlbumDto.artistId &&
-    //   ![...artistDb.values()].find(
-    //     (artist) => artist.id === createAlbumDto.artistId,
-    //   )
-    // ) {
-    //   throw new BadRequestException(
-    //     'Artist not found. Please add artist first.',
-    //   );
-    // }
-
-    const createdAlbum = {
-      id: crypto.randomUUID(),
-      artistId: createAlbumDto.artistId ? createAlbumDto.artistId : null,
-      ...createAlbumDto,
-    };
-
-    albumDb.set(createdAlbum.id, createdAlbum);
+  async createAlbum(createAlbumDto: CreateAlbumDto): Promise<Album> {
+    const createdAlbum = await this.prisma.album.create({
+      data: createAlbumDto,
+    });
 
     return createdAlbum;
   }
 
-  updateAlbum(createAlbumDto: CreateAlbumDto, id: string) {
+  async updateAlbum(
+    createAlbumDto: CreateAlbumDto,
+    id: string,
+  ): Promise<Album> {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid Album ID.');
     }
-    const foundAlbum = albumDb.get(id);
+    const foundAlbum = await this.prisma.album.findUnique({
+      where: {
+        id,
+      },
+    });
     if (!foundAlbum) {
       throw new NotFoundException("Album with specified ID hasn't been found.");
     }
 
-    // if (
-    //   createAlbumDto.artistId &&
-    //   ![...artistDb.values()].find(
-    //     (artist) => artist.id === createAlbumDto.artistId,
-    //   )
-    // ) {
-    //   throw new BadRequestException(
-    //     'Artist not found. Please add artist first.',
-    //   );
-    // }
+    const updatedAlbum = await this.prisma.album.update({
+      where: { id },
+      data: createAlbumDto,
+    });
 
-    foundAlbum.name = createAlbumDto.name;
-    foundAlbum.artistId = createAlbumDto.artistId;
-    foundAlbum.year = createAlbumDto.year;
-
-    return foundAlbum;
+    return updatedAlbum;
   }
 
-  deleteAlbum(id: string) {
+  async deleteAlbum(id: string): Promise<void> {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid album ID.');
     }
-    const foundAlbum = albumDb.get(id);
+    const foundAlbum = await this.prisma.album.findUnique({
+      where: {
+        id,
+      },
+    });
     if (!foundAlbum) {
       throw new NotFoundException("Album with specified ID hasn't been found.");
     }
 
-    [...trackDb.values()].forEach((track) => {
-      if (track.albumId === id) {
-        track.albumId = null;
-      }
+    // [...trackDb.values()].forEach((track) => {
+    //   if (track.albumId === id) {
+    //     track.albumId = null;
+    //   }
+    // });
+
+    // albumDb.delete(id);
+    await this.prisma.album.delete({
+      where: {
+        id,
+      },
     });
 
-    albumDb.delete(id);
     return;
   }
 }

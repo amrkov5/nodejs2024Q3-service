@@ -31,7 +31,7 @@ export class ArtistController {
     description: 'All artists returned successfully.',
     type: [ArtistClass],
   })
-  getArtists(): Artist[] {
+  getArtists(): Promise<Artist[]> {
     return this.artistService.getArtists();
   }
 
@@ -45,7 +45,7 @@ export class ArtistController {
   })
   @ApiResponse({ status: 400, description: 'Artist ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Artist not found.' })
-  getArtistById(@Param('id') id: string): Artist {
+  getArtistById(@Param('id') id: string): Promise<Artist> {
     return this.artistService.getArtistById(id);
   }
 
@@ -58,7 +58,7 @@ export class ArtistController {
     type: ArtistClass,
   })
   @ApiResponse({ status: 400, description: 'Body is invalid.' })
-  createArtist(@Body() createArtistDto: CreateArtistDto) {
+  createArtist(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
     return this.artistService.createArtist(createArtistDto);
   }
 
@@ -76,7 +76,7 @@ export class ArtistController {
   changeArtist(
     @Body() createArtistDto: CreateArtistDto,
     @Param('id') id: string,
-  ) {
+  ): Promise<Artist> {
     return this.artistService.updateArtist(createArtistDto, id);
   }
 
@@ -89,7 +89,7 @@ export class ArtistController {
   })
   @ApiResponse({ status: 404, description: 'Artist not found.' })
   @HttpCode(204)
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id') id: string): Promise<void> {
     return this.artistService.deleteArtist(id);
   }
 }

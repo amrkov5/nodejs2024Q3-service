@@ -7,80 +7,95 @@ import { albumDb, artistDb, trackDb } from 'src/db/db';
 import { isUUID } from 'class-validator';
 import { Artist } from './artist.interface';
 import { CreateArtistDto } from './dto/create-artist.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ArtistService {
-  getArtists(): Artist[] {
-    return [...artistDb.values()];
+  constructor(private prisma: PrismaService) {}
+
+  async getArtists(): Promise<Artist[]> {
+    const artists = await this.prisma.artist.findMany();
+    return artists;
   }
 
-  getArtistById(id: string): Artist {
+  async getArtistById(id: string): Promise<Artist> {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid artist ID');
     }
-    const foundArtist = artistDb.get(id);
+    const foundArtist = await this.prisma.artist.findUnique({
+      where: {
+        id,
+      },
+    });
+
     if (!foundArtist) {
       throw new NotFoundException("Artist with specified ID hasn't been found");
     }
     return foundArtist;
   }
 
-  createArtist(createArtistDto: CreateArtistDto): Artist {
-    // const isArtistAlreadyAdded = [...artistDb.values()].map(
-    //   (artist) => artist.name === createArtistDto.name,
-    // );
-    // if (isArtistAlreadyAdded.length !== 0) {
-    //   throw new BadRequestException('Artist has already been added');
-    // }
-
-    const createdArtist = {
-      id: crypto.randomUUID(),
-      ...createArtistDto,
-    };
-
-    artistDb.set(createdArtist.id, createdArtist);
+  async createArtist(createArtistDto: CreateArtistDto): Promise<Artist> {
+    const createdArtist = await this.prisma.artist.create({
+      data: createArtistDto,
+    });
 
     return createdArtist;
   }
 
-  updateArtist(createArtistDto: CreateArtistDto, id: string) {
+  async updateArtist(
+    createArtistDto: CreateArtistDto,
+    id: string,
+  ): Promise<Artist> {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid artist ID');
     }
-    const foundArtist = artistDb.get(id);
+    const foundArtist = await this.prisma.artist.findUnique({
+      where: {
+        id,
+      },
+    });
     if (!foundArtist) {
       throw new NotFoundException("Artist with specified ID hasn't been found");
     }
 
-    foundArtist.name = createArtistDto.name;
+    const updatedArtist = await this.prisma.artist.update({
+      where: { id },
+      data: createArtistDto,
+    });
 
-    foundArtist.grammy = createArtistDto.grammy;
-
-    return foundArtist;
+    return updatedArtist;
   }
 
-  deleteArtist(id: string) {
+  async deleteArtist(id: string): Promise<void> {
     if (!isUUID(id, 4)) {
       throw new BadRequestException('Please enter valid artist ID');
     }
-    const foundArtist = artistDb.get(id);
+    const foundArtist = await this.prisma.artist.findUnique({
+      where: {
+        id,
+      },
+    });
     if (!foundArtist) {
       throw new NotFoundException("Artist with specified ID hasn't been found");
     }
 
-    [...albumDb.values()].forEach((album) => {
-      if (album.artistId === id) {
-        album.artistId = null;
-      }
-    });
+    // [...albumDb.values()].forEach((album) => {
+    //   if (album.artistId === id) {
+    //     album.artistId = null;
+    //   }
+    // });
 
-    [...trackDb.values()].forEach((track) => {
-      if (track.artistId === id) {
-        track.artistId = null;
-      }
-    });
+    // [...trackDb.values()].forEach((track) => {
+    //   if (track.artistId === id) {
+    //     track.artistId = null;
+    //   }
+    // });
 
-    artistDb.delete(id);
+    await this.prisma.artist.delete({
+      where: {
+        id,
+      },
+    });
 
     return;
   }

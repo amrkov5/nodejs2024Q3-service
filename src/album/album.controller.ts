@@ -31,7 +31,7 @@ export class AlbumController {
     description: 'Albums returned successfully.',
     type: [AlbumClass],
   })
-  getAlbums(): Album[] {
+  getAlbums(): Promise<Album[]> {
     return this.albumService.getAlbums();
   }
 
@@ -45,7 +45,7 @@ export class AlbumController {
   })
   @ApiResponse({ status: 400, description: 'Album ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Album not found.' })
-  getAlbumById(@Param('id') id: string): Album {
+  getAlbumById(@Param('id') id: string): Promise<Album> {
     return this.albumService.getAlbumById(id);
   }
 
@@ -58,7 +58,7 @@ export class AlbumController {
     type: AlbumClass,
   })
   @ApiResponse({ status: 400, description: 'Body is invalid.' })
-  createAlbum(@Body() createAlbumDto: CreateAlbumDto) {
+  createAlbum(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
     return this.albumService.createAlbum(createAlbumDto);
   }
 
@@ -73,7 +73,10 @@ export class AlbumController {
   })
   @ApiResponse({ status: 400, description: 'Album ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Album not found.' })
-  changeAlbum(@Body() createAlbumDto: CreateAlbumDto, @Param('id') id: string) {
+  changeAlbum(
+    @Body() createAlbumDto: CreateAlbumDto,
+    @Param('id') id: string,
+  ): Promise<Album> {
     return this.albumService.updateAlbum(createAlbumDto, id);
   }
 
@@ -87,7 +90,7 @@ export class AlbumController {
   @ApiResponse({ status: 400, description: 'Album ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Album not found.' })
   @HttpCode(204)
-  deleteUser(@Param('id') id: string) {
+  deleteUser(@Param('id') id: string): Promise<void> {
     return this.albumService.deleteAlbum(id);
   }
 }
