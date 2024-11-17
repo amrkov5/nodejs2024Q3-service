@@ -18,7 +18,7 @@ export class FavoritesController {
     description: 'Favorites returned successfully.',
     type: FavoritesResponseClass,
   })
-  getFavorites(): FavoritesResponse {
+  getFavorites(): Promise<FavoritesResponse> {
     return this.favoritesService.getFavorites();
   }
 
@@ -37,7 +37,10 @@ export class FavoritesController {
   })
   @ApiResponse({ status: 400, description: 'Entity ID is invalid.' })
   @ApiResponse({ status: 422, description: 'Entity to add was not found.' })
-  addToFavorites(@Param('instance') instance: string, @Param('id') id: string) {
+  addToFavorites(
+    @Param('instance') instance: string,
+    @Param('id') id: string,
+  ): Promise<FavoritesResponse> {
     return this.favoritesService.addToFavorites(instance, id);
   }
 
@@ -59,7 +62,7 @@ export class FavoritesController {
   deleteFromFavorites(
     @Param('instance') instance: string,
     @Param('id') id: string,
-  ) {
+  ): Promise<void> {
     return this.favoritesService.deleteFromFavorites(instance, id);
   }
 }
