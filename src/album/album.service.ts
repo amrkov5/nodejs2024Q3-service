@@ -14,7 +14,7 @@ export class AlbumService {
 
   async getAlbums(): Promise<Album[]> {
     const albums = await this.prisma.album.findMany();
-    return albums
+    return albums;
   }
 
   async getAlbumById(id: string): Promise<Album> {
