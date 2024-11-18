@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as fs from 'fs';
-import * as yaml from 'js-yaml';
 import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
@@ -26,16 +25,16 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  const yamlStr = yaml.dump(document);
-  fs.writeFile('./doc/api.yaml', yamlStr, (err) => {
-    if (err) {
-      console.error('Error writing file:', err);
-    }
-  });
+  // const yamlStr = yaml.dump(document);
+  // fs.writeFile('./doc/api.yaml', yamlStr, (err) => {
+  //   if (err) {
+  //     console.error('Error writing file:', err);
+  //   }
+  // });
 
   SwaggerModule.setup('api', app, document);
 
   await app.listen(port);
-  console.log(`Swagger API is accessible on https://localhost:${port}/api`);
+  console.log(`Swagger API is accessible on http://localhost:${port}/api`);
 }
 bootstrap();

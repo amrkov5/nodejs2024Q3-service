@@ -3,11 +3,24 @@ services:
     image: amrkov5/nodejs2024q3-service:postgres
     ports:
       - '${DB_PORT}:${DB_PORT}'
+    command:
+      [
+        'postgres',
+        '-c',
+        'log_statement=all',
+        '-c',
+        'logging_collector=on',
+        '-c',
+        'log_directory=/var/log/postgresql',
+        '-c',
+        'log_filename=postgresql.log',
+      ]
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - postgres_logs:/var/log/postgresql
     env_file:
       - ../.env
+    restart: unless-stopped
     networks:
       - app-network
 
@@ -22,6 +35,7 @@ services:
       - PORT=${PORT}
     env_file:
       - ../.env
+    restart: unless-stopped
     networks:
       - app-network
 
