@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import process from 'process';
 import * as fs from 'fs';
 import * as yaml from 'js-yaml';
 import { ConfigService } from '@nestjs/config';

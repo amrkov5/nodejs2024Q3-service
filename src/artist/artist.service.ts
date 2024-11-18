@@ -78,18 +78,6 @@ export class ArtistService {
       throw new NotFoundException("Artist with specified ID hasn't been found");
     }
 
-    // [...albumDb.values()].forEach((album) => {
-    //   if (album.artistId === id) {
-    //     album.artistId = null;
-    //   }
-    // });
-
-    // [...trackDb.values()].forEach((track) => {
-    //   if (track.artistId === id) {
-    //     track.artistId = null;
-    //   }
-    // });
-
     await this.prisma.artist.delete({
       where: {
         id,

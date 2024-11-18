@@ -44,9 +44,9 @@ CREATE TABLE "Track" (
 CREATE TABLE "Favorites" (
     "id" TEXT NOT NULL,
     "type" TEXT NOT NULL,
-    "favoriteId" TEXT,
+    "favId" TEXT NOT NULL,
 
-    CONSTRAINT "Favorites_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Favorites_pkey" PRIMARY KEY ("favId")
 );
 
 -- AddForeignKey
@@ -57,12 +57,3 @@ ALTER TABLE "Track" ADD CONSTRAINT "Track_artistId_fkey" FOREIGN KEY ("artistId"
 
 -- AddForeignKey
 ALTER TABLE "Track" ADD CONSTRAINT "Track_albumId_fkey" FOREIGN KEY ("albumId") REFERENCES "Album"("id") ON DELETE SET NULL ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Favorites" ADD CONSTRAINT "Track_Favorites_fk" FOREIGN KEY ("favoriteId") REFERENCES "Track"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Favorites" ADD CONSTRAINT "Album_Favorites_fk" FOREIGN KEY ("favoriteId") REFERENCES "Album"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
-ALTER TABLE "Favorites" ADD CONSTRAINT "Artist_Favorites_fk" FOREIGN KEY ("favoriteId") REFERENCES "Artist"("id") ON DELETE CASCADE ON UPDATE CASCADE;

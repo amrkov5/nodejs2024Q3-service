@@ -84,33 +84,6 @@ export class FavoritesService {
       },
     });
 
-    // switch (instance) {
-    //   case 'artist':
-    //     await this.prisma.favorites.create({
-    //       data: {
-    //         type: instance,
-    //         artistId: id,
-    //       },
-    //     });
-    //     break;
-    //   case 'album':
-    //     await this.prisma.favorites.create({
-    //       data: {
-    //         type: instance,
-    //         albumId: id,
-    //       },
-    //     });
-    //     break;
-    //   case 'track':
-    //     await this.prisma.favorites.create({
-    //       data: {
-    //         type: instance,
-    //         trackId: id,
-    //       },
-    //     });
-    //     break;
-    // }
-
     return this.getFavorites();
   }
 
@@ -131,30 +104,6 @@ export class FavoritesService {
     if (foundedRecord.length === 0) {
       throw new NotFoundException(`${instance} ID hasn't been found`);
     }
-
-    // const idsIndexesToDelete: number[] = favoritesDb[instanceInFavs]
-    //   .map((el: string, index: number) => {
-    //     if (el === id) {
-    //       return index;
-    //     }
-    //     return;
-    //   })
-    //   .filter((i: number) => i);
-    // idsIndexesToDelete.reverse().forEach((i) => {
-    //   favoritesDb[instanceInFavs].splice(i, 1);
-    // });
-
-    // switch (instance) {
-    //   case 'artist':
-    //     await this.prisma.favorites.deleteMany({ where: { artistId: id } });
-    //     break;
-    //   case 'album':
-    //     await this.prisma.favorites.deleteMany({ where: { albumId: id } });
-    //     break;
-    //   case 'track':
-    //     await this.prisma.favorites.deleteMany({ where: { trackId: id } });
-    //     break;
-    // }
 
     await this.prisma.favorites.deleteMany({ where: { favId: id } });
 

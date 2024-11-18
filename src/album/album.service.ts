@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { albumDb, trackDb } from 'src/db/db';
 import { isUUID } from 'class-validator';
 import { Album } from './album.interface';
 import { CreateAlbumDto } from './dto/create-album.dto';
@@ -78,13 +77,6 @@ export class AlbumService {
       throw new NotFoundException("Album with specified ID hasn't been found.");
     }
 
-    // [...trackDb.values()].forEach((track) => {
-    //   if (track.albumId === id) {
-    //     track.albumId = null;
-    //   }
-    // });
-
-    // albumDb.delete(id);
     await this.prisma.album.delete({
       where: {
         id,

@@ -3,7 +3,6 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { trackDb } from 'src/db/db';
 import { isUUID } from 'class-validator';
 import { Track } from './track.interface';
 import { CreateTrackDto } from './dto/create-track.dto';
