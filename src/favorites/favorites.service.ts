@@ -13,7 +13,7 @@ export class FavoritesService {
   constructor(private prisma: PrismaService) {}
 
   async getFavorites(): Promise<FavoritesResponse> {
-    let favorites = await this.prisma.favorites.findMany();
+    const favorites = await this.prisma.favorites.findMany();
 
     const trackIds = favorites
       .filter((el) => el.type === 'track')

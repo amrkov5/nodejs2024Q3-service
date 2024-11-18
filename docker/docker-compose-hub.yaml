@@ -1,0 +1,32 @@
+services:
+  postgres:
+    image: amrkov5/nodejs2024q3-service:postgres
+    ports:
+      - '${DB_PORT}:${DB_PORT}'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    env_file:
+      - ../.env
+    networks:
+      - app-network
+
+  app:
+    image: amrkov5/nodejs2024q3-service:app
+    depends_on:
+      - postgres
+    ports:
+      - '${PORT}:${PORT}'
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+      - PORT=${PORT}
+    env_file:
+      - ../.env
+    networks:
+      - app-network
+
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge

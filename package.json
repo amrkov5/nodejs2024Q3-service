@@ -10,8 +10,12 @@
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "docker:start": "docker-compose --env-file ./.env -f docker/docker-compose.yaml --env-file ./.env up -d",
+    "docker:hub:start": "docker-compose --env-file ./.env -f docker/docker-compose-hub.yaml --env-file ./.env up -d",
+    "docker:hub:stop": "docker-compose --env-file ./.env -f docker/docker-compose-hub.yaml --env-file ./.env down -d",
     "docker:stop": "docker-compose -f docker/docker-compose.yaml --env-file ./.env  down",
     "docker:build": "docker-compose -f docker/docker-compose.yaml --env-file ./.env build",
+    "docker:vulns": "docker scout cves docker-app && docker scout cves docker-postgres",
+    "docker:push": "docker tag docker-app:latest amrkov5/nodejs2024q3-service:app && docker tag docker-postgres:latest amrkov5/nodejs2024q3-service:postgres && docker push amrkov5/nodejs2024q3-service:app && docker push amrkov5/nodejs2024q3-service:postgres",
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -23,10 +27,11 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "prisma": "prisma", 
-  "prisma:generate": "prisma generate" 
+    "prisma": "prisma",
+    "prisma:generate": "prisma generate"
   },
   "dependencies": {
+    "@nestjs/cli": "^8.0.0",
     "@nestjs/common": "^8.0.0",
     "@nestjs/config": "^3.3.0",
     "@nestjs/core": "^8.0.0",
@@ -47,7 +52,6 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
-    "@nestjs/cli": "^8.0.0",
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.0",
     "@types/bcrypt": "^5.0.0",
