@@ -8,15 +8,13 @@ COPY ./package*.json ./
 
 RUN npm install --omit=dev
 
-COPY ./prisma ./
-
-RUN npm run prisma:generate
-
 COPY . .
+
+RUN npx prisma generate
 
 RUN npm run build
 
-FROM node:22.9.0-alpine AS main
+FROM gcr.io/distroless/nodejs
 
 ENV PORT=4000
 
@@ -25,8 +23,9 @@ ENV DATABASE_URL="postgresql://musicLover:libraryRSS@postgres:5432/library?schem
 WORKDIR /nodejs2024Q3-service
 
 COPY --from=builder /nodejs2024Q3-service/dist ./dist
+COPY --from=builder /nodejs2024Q3-service/prisma ./prisma
 COPY --from=builder /nodejs2024Q3-service/node_modules ./node_modules
 
 EXPOSE ${PORT}
 
-CMD ["node", "dist/main"]
+CMD ["sh", "-c", "npx prisma migrate deploy && node dist/main"]

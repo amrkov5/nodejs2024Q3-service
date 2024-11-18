@@ -9,12 +9,14 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "docker:start": "docker-compose --env-file ./.env -f docker/docker-compose.yaml --env-file ./.env up -d",
-    "docker:hub:start": "docker-compose --env-file ./.env -f docker/docker-compose-hub.yaml --env-file ./.env up -d",
-    "docker:hub:stop": "docker-compose --env-file ./.env -f docker/docker-compose-hub.yaml --env-file ./.env down -d",
-    "docker:stop": "docker-compose -f docker/docker-compose.yaml --env-file ./.env  down",
-    "docker:build": "docker-compose -f docker/docker-compose.yaml --env-file ./.env build",
+    "docker:dev:start": "docker-compose --env-file ./.env -f docker/docker-compose-dev.yml up --watch",
+    "docker:dev:build": "docker-compose --env-file ./.env -f docker/docker-compose-dev.yml build",
+    "docker:hub:start": "docker-compose --env-file ./.env -f docker/docker-compose-hub.yml up -d",
+    "docker:hub:stop": "docker-compose --env-file ./.env -f docker/docker-compose-hub.yml down -d",
     "docker:vulns": "docker scout cves docker-app && docker scout cves docker-postgres",
+    "docker:start": "docker-compose --env-file ./.env -f docker/docker-compose.yml up -d",
+    "docker:stop": "docker-compose -f docker/docker-compose.yml --env-file ./.env down",
+    "docker:build": "docker-compose -f docker/docker-compose.yml --env-file ./.env build",
     "docker:push": "docker tag docker-app:latest amrkov5/nodejs2024q3-service:app && docker tag docker-postgres:latest amrkov5/nodejs2024q3-service:postgres && docker push amrkov5/nodejs2024q3-service:app && docker push amrkov5/nodejs2024q3-service:postgres",
     "start": "nest start",
     "start:dev": "nest start --watch",
@@ -26,9 +28,7 @@
     "test:refresh": "cross-env TEST_MODE=auth jest --testPathPattern refresh.e2e.spec.ts --noStackTrace --runInBand",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "prisma": "prisma",
-    "prisma:generate": "prisma generate"
+    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand"
   },
   "dependencies": {
     "@nestjs/cli": "^8.0.0",
@@ -49,8 +49,8 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
-    "swagger-ui-express": "^5.0.1",
-    "prisma": "^5.22.0"
+    "prisma": "^5.22.0",
+    "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
     "@nestjs/schematics": "^8.0.0",

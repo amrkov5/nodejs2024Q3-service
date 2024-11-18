@@ -1,10 +1,13 @@
 ./node_modules
 ./dist
-./doc
 ./test
+./.git
+./docker
 
 .env.*
 eslint.js
 .prettierrc
 jest.config.json
 README.md
+.gitignore
+nest-cli.json
