@@ -36,6 +36,23 @@ For more information about OpenAPI/Swagger please visit https://swagger.io/.
 npm run docker:dev:start
 ```
 
+1. Change URL in schema.prisma from:
+ ```
+url = env("DATABASE_URL")
+```
+   to:
+```
+url = env("DATABASE_MIGRATE_URL")
+```
+2. Run:
+```bash
+npx prisma migrate deploy
+```
+3. Change DB url back:
+ ```
+url = env("DATABASE_URL")
+```
+
 ### To stop app in dev mode
 
 ```bash
