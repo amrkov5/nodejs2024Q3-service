@@ -1,0 +1,17 @@
+FROM node:22.9.0-alpine AS builder
+
+RUN mkdir /nodejs2024Q3-service
+
+WORKDIR /nodejs2024Q3-service
+
+COPY ./package*.json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npx prisma generate
+
+EXPOSE ${PORT}
+
+CMD ["npx", "prisma", "migrate", "deploy"]
