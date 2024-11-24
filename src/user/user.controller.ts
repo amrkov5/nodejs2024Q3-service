@@ -73,30 +73,30 @@ export class UserController {
     return resp;
   }
 
-  @Post()
-  @ApiOperation({ summary: 'Create new user' })
-  @ApiBody({ type: CreateUserDto })
-  @ApiResponse({
-    status: 201,
-    description: 'User created successfully.',
-    type: ReturnedUserClass,
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Body is invalid.',
-  })
-  async createUser(
-    @Req() request: Request,
-    @Body() createUserDto: CreateUserDto,
-  ): Promise<ReturnedUser> {
-    this.logger.verbose('Start creating user...');
-    const resp = await this.userService.createUser(createUserDto);
-    if (resp) {
-      this.logger.log(createLogMessage(request, 'user', '201'));
-    }
-    this.logger.verbose('Finished');
-    return resp;
-  }
+  // @Post()
+  // @ApiOperation({ summary: 'Create new user' })
+  // @ApiBody({ type: CreateUserDto })
+  // @ApiResponse({
+  //   status: 201,
+  //   description: 'User created successfully.',
+  //   type: ReturnedUserClass,
+  // })
+  // @ApiResponse({
+  //   status: 400,
+  //   description: 'Body is invalid.',
+  // })
+  // async createUser(
+  //   @Req() request: Request,
+  //   @Body() createUserDto: CreateUserDto,
+  // ): Promise<ReturnedUser> {
+  //   this.logger.verbose('Start creating user...');
+  //   const resp = await this.userService.createUser(createUserDto);
+  //   if (resp) {
+  //     this.logger.log(createLogMessage(request, 'user', '201'));
+  //   }
+  //   this.logger.verbose('Finished');
+  //   return resp;
+  // }
 
   @Put(':id')
   @ApiOperation({ summary: "Update user's password" })

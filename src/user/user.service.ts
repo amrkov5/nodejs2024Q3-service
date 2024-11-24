@@ -45,29 +45,29 @@ export class UserService {
     };
   }
 
-  async createUser(createUserDto: CreateUserDto): Promise<ReturnedUser> {
-    const newUser = {
-      login: createUserDto.login,
-      password: createUserDto.password,
-    };
+  // async createUser(createUserDto: CreateUserDto): Promise<ReturnedUser> {
+  //   const newUser = {
+  //     login: createUserDto.login,
+  //     password: createUserDto.password,
+  //   };
 
-    const createdUser = await this.prisma.user.create({
-      data: newUser,
-      select: {
-        id: true,
-        login: true,
-        createdAt: true,
-        updatedAt: true,
-        version: true,
-      },
-    });
+  //   const createdUser = await this.prisma.user.create({
+  //     data: newUser,
+  //     select: {
+  //       id: true,
+  //       login: true,
+  //       createdAt: true,
+  //       updatedAt: true,
+  //       version: true,
+  //     },
+  //   });
 
-    return {
-      ...createdUser,
-      createdAt: createdUser.createdAt.getTime(),
-      updatedAt: createdUser.updatedAt.getTime(),
-    };
-  }
+  //   return {
+  //     ...createdUser,
+  //     createdAt: createdUser.createdAt.getTime(),
+  //     updatedAt: createdUser.updatedAt.getTime(),
+  //   };
+  // }
 
   async updatePassword(
     updatePasswordDto: UpdatePasswordDto,

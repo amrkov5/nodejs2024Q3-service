@@ -45,11 +45,9 @@ export class CustomLogger implements LoggerService {
   }
 
   error(message: string, trace?: string) {
-    if (Number(process.env.LOG_LEVEL) > 0) {
-      this.writeLogToFile(`[ERROR] ${message}`, 'error');
-      console.error(`[ERROR] ${new Date().toISOString()}: ${message}`);
-      if (trace) console.error(trace);
-    }
+    this.writeLogToFile(`[ERROR] ${message}`, 'error');
+    console.error(`[ERROR] ${new Date().toISOString()}: ${message}`);
+    if (trace) console.error(trace);
   }
 
   warn(message: string) {
