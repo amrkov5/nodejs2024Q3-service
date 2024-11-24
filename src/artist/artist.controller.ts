@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { Artist, ArtistClass } from './artist.interface';
 import { ArtistService } from './artist.service';
@@ -18,11 +19,17 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { CustomLogger } from 'src/logger/logger.service';
+import createLogMessage from 'src/service/createLogMessage';
+import { Request } from 'express';
 
 @ApiTags('Artist instance')
 @Controller('artist')
 export class ArtistController {
-  constructor(private readonly artistService: ArtistService) {}
+  constructor(
+    private readonly artistService: ArtistService,
+    private readonly logger: CustomLogger,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all artists' })
@@ -31,8 +38,12 @@ export class ArtistController {
     description: 'All artists returned successfully.',
     type: [ArtistClass],
   })
-  getArtists(): Promise<Artist[]> {
-    return this.artistService.getArtists();
+  async getArtists(@Req() request: Request): Promise<Artist[]> {
+    const resp = await this.artistService.getArtists();
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'artist', '200'));
+    }
+    return resp;
   }
 
   @Get(':id')
@@ -45,21 +56,35 @@ export class ArtistController {
   })
   @ApiResponse({ status: 400, description: 'Artist ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Artist not found.' })
-  getArtistById(@Param('id') id: string): Promise<Artist> {
-    return this.artistService.getArtistById(id);
+  async getArtistById(
+    @Req() request: Request,
+    @Param('id') id: string,
+  ): Promise<Artist> {
+    const resp = await this.artistService.getArtistById(id);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'artist', '200'));
+    }
+    return resp;
   }
 
   @Post()
   @ApiOperation({ summary: 'Create a new artist' })
   @ApiBody({ type: CreateArtistDto })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Artist created successfully.',
     type: ArtistClass,
   })
   @ApiResponse({ status: 400, description: 'Body is invalid.' })
-  createArtist(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
-    return this.artistService.createArtist(createArtistDto);
+  async createArtist(
+    @Req() request: Request,
+    @Body() createArtistDto: CreateArtistDto,
+  ): Promise<Artist> {
+    const resp = await this.artistService.createArtist(createArtistDto);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'artist', '201'));
+    }
+    return resp;
   }
 
   @Put(':id')
@@ -73,11 +98,16 @@ export class ArtistController {
   })
   @ApiResponse({ status: 400, description: 'Artist ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Artist not found.' })
-  changeArtist(
+  async changeArtist(
+    @Req() request: Request,
     @Body() createArtistDto: CreateArtistDto,
     @Param('id') id: string,
   ): Promise<Artist> {
-    return this.artistService.updateArtist(createArtistDto, id);
+    const resp = await this.artistService.updateArtist(createArtistDto, id);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'artist', '200'));
+    }
+    return resp;
   }
 
   @Delete(':id')
@@ -89,7 +119,12 @@ export class ArtistController {
   })
   @ApiResponse({ status: 404, description: 'Artist not found.' })
   @HttpCode(204)
-  deleteUser(@Param('id') id: string): Promise<void> {
-    return this.artistService.deleteArtist(id);
+  async deleteUser(
+    @Req() request: Request,
+    @Param('id') id: string,
+  ): Promise<void> {
+    await this.artistService.deleteArtist(id);
+    this.logger.log(createLogMessage(request, 'artist', '204'));
+    return;
   }
 }

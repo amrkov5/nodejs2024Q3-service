@@ -7,6 +7,8 @@ import {
   Param,
   Post,
   Put,
+  Req,
+  Res,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ReturnedUser, ReturnedUserClass } from './user.interface';
@@ -19,11 +21,17 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { CustomLogger } from 'src/logger/logger.service';
+import { Request, Response } from 'express';
+import createLogMessage from 'src/service/createLogMessage';
 
 @ApiTags('User instance')
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly logger: CustomLogger,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all users' })
@@ -32,8 +40,14 @@ export class UserController {
     description: 'Users returned successfully.',
     type: [ReturnedUserClass],
   })
-  getUsers(): Promise<ReturnedUser[]> {
-    return this.userService.getUsers();
+  async getUsers(@Req() request: Request): Promise<ReturnedUser[]> {
+    this.logger.verbose('Start getting all users...');
+    const resp = await this.userService.getUsers();
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'user', '200'));
+    }
+    this.logger.verbose('Finished');
+    return resp;
   }
 
   @Get(':id')
@@ -46,8 +60,17 @@ export class UserController {
   })
   @ApiResponse({ status: 400, description: 'ID is invalid.' })
   @ApiResponse({ status: 404, description: 'User not found.' })
-  getUserById(@Param('id') id: string): Promise<ReturnedUser> {
-    return this.userService.getUserById(id);
+  async getUserById(
+    @Req() request: Request,
+    @Param('id') id: string,
+  ): Promise<ReturnedUser> {
+    this.logger.verbose('Start getting users by ID...');
+    const resp = await this.userService.getUserById(id);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'user', '200'));
+    }
+    this.logger.verbose('Finished');
+    return resp;
   }
 
   @Post()
@@ -62,8 +85,17 @@ export class UserController {
     status: 400,
     description: 'Body is invalid.',
   })
-  createUser(@Body() createUserDto: CreateUserDto): Promise<ReturnedUser> {
-    return this.userService.createUser(createUserDto);
+  async createUser(
+    @Req() request: Request,
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<ReturnedUser> {
+    this.logger.verbose('Start creating user...');
+    const resp = await this.userService.createUser(createUserDto);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'user', '201'));
+    }
+    this.logger.verbose('Finished');
+    return resp;
   }
 
   @Put(':id')
@@ -81,11 +113,18 @@ export class UserController {
   })
   @ApiResponse({ status: 403, description: 'The old password is wrong.' })
   @ApiResponse({ status: 404, description: 'User not found.' })
-  changePassword(
+  async changePassword(
+    @Req() request: Request,
     @Body() updatePasswordDto: UpdatePasswordDto,
     @Param('id') id: string,
   ): Promise<ReturnedUser> {
-    return this.userService.updatePassword(updatePasswordDto, id);
+    this.logger.verbose('Start updating user...');
+    const resp = await this.userService.updatePassword(updatePasswordDto, id);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'user', '200'));
+    }
+    this.logger.verbose('Finished');
+    return resp;
   }
 
   @Delete(':id')
@@ -101,7 +140,14 @@ export class UserController {
   })
   @ApiResponse({ status: 404, description: 'User not found.' })
   @HttpCode(204)
-  deleteUser(@Param('id') id: string): Promise<void> {
-    return this.userService.deleteUser(id);
+  async deleteUser(
+    @Req() request: Request,
+    @Param('id') id: string,
+  ): Promise<void> {
+    this.logger.verbose('Start deleting user...');
+    await this.userService.deleteUser(id);
+    this.logger.log(createLogMessage(request, 'user', '204'));
+    this.logger.verbose('Finished');
+    return;
   }
 }

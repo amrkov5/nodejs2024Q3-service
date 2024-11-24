@@ -2,8 +2,9 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as fs from 'fs';
 import { ConfigService } from '@nestjs/config';
+import { CustomLogger } from './logger/logger.service';
+import { CustomExceptionsFilter } from './exceptionFilter/exceptionFilter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +15,9 @@ async function bootstrap() {
       forbidUnknownValues: true,
     }),
   );
+
+  app.useLogger(app.get(CustomLogger));
+  app.useGlobalFilters(new CustomExceptionsFilter(app.get(CustomLogger)));
 
   const configService = app.get(ConfigService);
   const port = configService.get<string>('PORT', '4000');

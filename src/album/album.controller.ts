@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { Album, AlbumClass } from './album.interface';
 import { AlbumService } from './album.service';
@@ -18,11 +19,17 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { CustomLogger } from 'src/logger/logger.service';
+import createLogMessage from 'src/service/createLogMessage';
+import { Request } from 'express';
 
 @ApiTags('Album instance')
 @Controller('album')
 export class AlbumController {
-  constructor(private readonly albumService: AlbumService) {}
+  constructor(
+    private readonly albumService: AlbumService,
+    private readonly logger: CustomLogger,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Change track data' })
@@ -31,8 +38,12 @@ export class AlbumController {
     description: 'Albums returned successfully.',
     type: [AlbumClass],
   })
-  getAlbums(): Promise<Album[]> {
-    return this.albumService.getAlbums();
+  async getAlbums(@Req() request: Request): Promise<Album[]> {
+    const resp = await this.albumService.getAlbums();
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'album', '200'));
+    }
+    return resp;
   }
 
   @Get(':id')
@@ -45,21 +56,35 @@ export class AlbumController {
   })
   @ApiResponse({ status: 400, description: 'Album ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Album not found.' })
-  getAlbumById(@Param('id') id: string): Promise<Album> {
-    return this.albumService.getAlbumById(id);
+  async getAlbumById(
+    @Req() request: Request,
+    @Param('id') id: string,
+  ): Promise<Album> {
+    const resp = this.albumService.getAlbumById(id);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'album', '200'));
+    }
+    return resp;
   }
 
   @Post()
   @ApiOperation({ summary: 'Create a new album' })
   @ApiBody({ type: CreateAlbumDto })
   @ApiResponse({
-    status: 200,
+    status: 201,
     description: 'Album created successfully.',
     type: AlbumClass,
   })
   @ApiResponse({ status: 400, description: 'Body is invalid.' })
-  createAlbum(@Body() createAlbumDto: CreateAlbumDto): Promise<Album> {
-    return this.albumService.createAlbum(createAlbumDto);
+  async createAlbum(
+    @Req() request: Request,
+    @Body() createAlbumDto: CreateAlbumDto,
+  ): Promise<Album> {
+    const resp = await this.albumService.createAlbum(createAlbumDto);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'album', '201'));
+    }
+    return resp;
   }
 
   @Put(':id')
@@ -73,11 +98,16 @@ export class AlbumController {
   })
   @ApiResponse({ status: 400, description: 'Album ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Album not found.' })
-  changeAlbum(
+  async changeAlbum(
+    @Req() request: Request,
     @Body() createAlbumDto: CreateAlbumDto,
     @Param('id') id: string,
   ): Promise<Album> {
-    return this.albumService.updateAlbum(createAlbumDto, id);
+    const resp = await this.albumService.updateAlbum(createAlbumDto, id);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'album', '200'));
+    }
+    return resp;
   }
 
   @Delete(':id')
@@ -90,7 +120,12 @@ export class AlbumController {
   @ApiResponse({ status: 400, description: 'Album ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Album not found.' })
   @HttpCode(204)
-  deleteUser(@Param('id') id: string): Promise<void> {
-    return this.albumService.deleteAlbum(id);
+  async deleteUser(
+    @Req() request: Request,
+    @Param('id') id: string,
+  ): Promise<void> {
+    await this.albumService.deleteAlbum(id);
+    this.logger.log(createLogMessage(request, 'album', '204'));
+    return;
   }
 }

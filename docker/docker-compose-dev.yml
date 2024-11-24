@@ -41,6 +41,8 @@ services:
       - ../.env
     restart: unless-stopped
     command: npm run start:dev
+    volumes:
+      - web_logs:/var/log/web/ml
     develop:
       watch:
         - action: sync
@@ -55,6 +57,7 @@ services:
 volumes:
   postgres_data:
   postgres_logs:
+  web_logs:
 
 networks:
   app-network:

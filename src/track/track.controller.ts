@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Req,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { Track, TrackClass } from './track.interface';
@@ -18,11 +19,17 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { CustomLogger } from 'src/logger/logger.service';
+import createLogMessage from 'src/service/createLogMessage';
+import { Request } from 'express';
 
 @ApiTags('Track instance')
 @Controller('track')
 export class TrackController {
-  constructor(private readonly trackService: TrackService) {}
+  constructor(
+    private readonly trackService: TrackService,
+    private readonly logger: CustomLogger,
+  ) {}
 
   @Get()
   @ApiOperation({ summary: 'Get all tracks' })
@@ -31,8 +38,12 @@ export class TrackController {
     description: 'Track returned successfully.',
     type: [TrackClass],
   })
-  getTracks(): Promise<Track[]> {
-    return this.trackService.getTracks();
+  async getTracks(@Req() request: Request): Promise<Track[]> {
+    const resp = await this.trackService.getTracks();
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'track', '200'));
+    }
+    return resp;
   }
 
   @Get(':id')
@@ -45,8 +56,15 @@ export class TrackController {
   })
   @ApiResponse({ status: 400, description: 'Track ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Track not found.' })
-  getTrackById(@Param('id') id: string): Promise<Track> {
-    return this.trackService.getTrackById(id);
+  async getTrackById(
+    @Req() request: Request,
+    @Param('id') id: string,
+  ): Promise<Track> {
+    const resp = await this.trackService.getTrackById(id);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'track', '200'));
+    }
+    return resp;
   }
 
   @Post()
@@ -58,8 +76,15 @@ export class TrackController {
     type: TrackClass,
   })
   @ApiResponse({ status: 400, description: 'Body is invalid.' })
-  createTrack(@Body() createTrackDto: CreateTrackDto): Promise<Track> {
-    return this.trackService.createTrack(createTrackDto);
+  async createTrack(
+    @Req() request: Request,
+    @Body() createTrackDto: CreateTrackDto,
+  ): Promise<Track> {
+    const resp = await this.trackService.createTrack(createTrackDto);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'track', '201'));
+    }
+    return resp;
   }
 
   @Put(':id')
@@ -73,11 +98,16 @@ export class TrackController {
   })
   @ApiResponse({ status: 400, description: 'Track ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Track not found.' })
-  changeTrack(
+  async changeTrack(
+    @Req() request: Request,
     @Body() createTrackDto: CreateTrackDto,
     @Param('id') id: string,
   ): Promise<Track> {
-    return this.trackService.updateTrack(createTrackDto, id);
+    const resp = await this.trackService.updateTrack(createTrackDto, id);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'track', '200'));
+    }
+    return resp;
   }
 
   @Delete(':id')
@@ -90,7 +120,12 @@ export class TrackController {
   @ApiResponse({ status: 400, description: 'Track ID is invalid.' })
   @ApiResponse({ status: 404, description: 'Track not found.' })
   @HttpCode(204)
-  deleteUser(@Param('id') id: string): Promise<void> {
-    return this.trackService.deleteTrack(id);
+  async deleteUser(
+    @Req() request: Request,
+    @Param('id') id: string,
+  ): Promise<void> {
+    await this.trackService.deleteTrack(id);
+    this.logger.log(createLogMessage(request, 'track', '204'));
+    return;
   }
 }
