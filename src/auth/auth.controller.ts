@@ -1,9 +1,18 @@
 import { CustomLogger } from 'src/logger/logger.service';
 import { AuthService } from './auth.service';
-import { Body, Controller, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { Request } from 'express';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import createLogMessage from 'src/service/createLogMessage';
+import { AuthGuard } from './auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -35,5 +44,18 @@ export class AuthController {
     }
     this.logger.verbose('Finished');
     return loggedUser;
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('refresh')
+  @HttpCode(200)
+  async refresh(@Req() request: Request, @Body() body: any) {
+    this.logger.verbose('Start refreshing process...');
+    const refreshedTokens = await this.authService.refresh(body);
+    if (refreshedTokens) {
+      this.logger.log(createLogMessage(request, 'user', '200'));
+    }
+    this.logger.verbose('Finished');
+    return refreshedTokens;
   }
 }

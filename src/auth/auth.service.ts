@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { config } from 'dotenv';
@@ -55,24 +56,10 @@ export class AuthService {
       },
     });
 
-    const { id, login } = createdUser;
-    const accessToken = this.createAccessToken({ userId: id, login });
-    const refreshToken = this.createRefreshToken({ userId: id, login });
-
-    await this.prisma.auth.create({
-      data: {
-        userId: id,
-        accessToken,
-        refreshToken,
-      },
-    });
-
     return {
       ...createdUser,
       createdAt: createdUser.createdAt.getTime(),
       updatedAt: createdUser.updatedAt.getTime(),
-      accessToken,
-      refreshToken,
     };
   }
 
@@ -88,22 +75,38 @@ export class AuthService {
     if (await bcrypt.compare(createUserDto.password, user.password)) {
       const accessToken = this.createAccessToken({
         userId: user.id,
-        user: user.login,
+        login: user.login,
       });
       const refreshToken = this.createRefreshToken({
         userId: user.id,
-        user: user.login,
+        login: user.login,
       });
 
-      await this.prisma.auth.update({
+      const foundTokens = await this.prisma.auth.findUnique({
         where: {
           userId: user.id,
         },
-        data: {
-          accessToken,
-          refreshToken,
-        },
       });
+
+      if (foundTokens) {
+        await this.prisma.auth.update({
+          where: {
+            userId: user.id,
+          },
+          data: {
+            accessToken,
+            refreshToken,
+          },
+        });
+      } else {
+        await this.prisma.auth.create({
+          data: {
+            userId: user.id,
+            accessToken,
+            refreshToken,
+          },
+        });
+      }
 
       const returnedUser = {
         id: user.id,
@@ -158,5 +161,56 @@ export class AuthService {
     } else {
       throw new ForbiddenException("The passwords don't match");
     }
+  }
+
+  async refresh(body: any) {
+    if (!body.refreshToken || typeof body.refreshToken !== 'string') {
+      throw new UnauthorizedException('Please provide refresh token');
+    }
+
+    try {
+      await this.jwtService.verify(body.refreshToken, {
+        secret: process.env.JWT_REFRESH_SECRET_KEY,
+      });
+    } catch (err) {
+      throw new ForbiddenException('Refresh token is invalid', err.message);
+    }
+
+    const userTokens = await this.prisma.auth.findFirst({
+      where: { refreshToken: body.refreshToken },
+    });
+
+    if (!userTokens) {
+      throw new NotFoundException(
+        "User with specified refresh token hasn't been found",
+      );
+    }
+
+    const user = await this.prisma.user.findUnique({
+      where: { id: userTokens.userId },
+    });
+
+    if (!user) {
+      throw new NotFoundException("User with specified ID hasn't been found");
+    }
+
+    const updatedAccessToken = this.createAccessToken({
+      userId: user.id,
+      login: user.login,
+    });
+    const updatedRefreshToken = this.createRefreshToken({
+      userId: user.id,
+      login: user.login,
+    });
+
+    const updatedTokens = await this.prisma.auth.update({
+      where: { userId: user.id },
+      data: {
+        accessToken: updatedAccessToken,
+        refreshToken: updatedRefreshToken,
+      },
+    });
+
+    return updatedTokens;
   }
 }
