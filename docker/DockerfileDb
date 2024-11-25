@@ -1,0 +1,10 @@
+FROM postgres:alpine
+
+ENV POSTGRES_USER=musicLover
+ENV POSTGRES_PASSWORD=libraryRSS
+ENV POSTGRES_DB=library
+ENV DB_PORT=5432
+
+RUN mkdir -p /var/log/postgresql && chmod 777 /var/log/postgresql
+
+EXPOSE ${DB_PORT}
