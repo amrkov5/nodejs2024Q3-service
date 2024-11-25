@@ -37,15 +37,21 @@ export class CustomLogger implements LoggerService {
     });
   }
 
-  log(message: string) {
+  async log(message: string) {
     if (Number(process.env.LOG_LEVEL) > 0) {
-      this.writeLogToFile(`[LOG] ${message}`, 'log');
+      await this.writeLogToFile(
+        `[LOG] ${new Date().toISOString()}: ${message}`,
+        'log',
+      );
       console.log(`[LOG] ${new Date().toISOString()}: ${message}`);
     }
   }
 
-  error(message: string, trace?: string) {
-    this.writeLogToFile(`[ERROR] ${message}`, 'error');
+  async error(message: string, trace?: string) {
+    await this.writeLogToFile(
+      `[ERROR] ${new Date().toISOString()}: ${message}`,
+      'error',
+    );
     console.error(`[ERROR] ${new Date().toISOString()}: ${message}`);
     if (trace) console.error(trace);
   }
@@ -54,9 +60,12 @@ export class CustomLogger implements LoggerService {
     console.warn(`[WARN] ${new Date().toISOString()}: ${message}`);
   }
 
-  verbose(message: string) {
+  async verbose(message: string) {
     if (Number(process.env.LOG_LEVEL) === 2) {
-      this.writeLogToFile(`[VERBOSE] ${message}`, 'log');
+      await this.writeLogToFile(
+        `[VERBOSE] ${new Date().toISOString()}: ${message}`,
+        'log',
+      );
       console.info(`[VERBOSE] ${new Date().toISOString()}: ${message}`);
     }
   }

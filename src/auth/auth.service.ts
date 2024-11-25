@@ -21,8 +21,8 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  validate(token: string) {
-    return this.jwtService.verify(token);
+  async validate(token: string) {
+    return await this.jwtService.verify(token);
   }
 
   createAccessToken(payload) {
@@ -117,6 +117,7 @@ export class AuthService {
         accessToken,
         refreshToken,
       };
+
 
       return returnedUser;
     } else {
