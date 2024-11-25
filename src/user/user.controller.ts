@@ -8,7 +8,6 @@ import {
   Post,
   Put,
   Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
@@ -23,7 +22,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CustomLogger } from 'src/logger/logger.service';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import createLogMessage from 'src/service/createLogMessage';
 import { AuthService } from 'src/auth/auth.service';
 import { AuthGuard } from 'src/auth/auth.guard';

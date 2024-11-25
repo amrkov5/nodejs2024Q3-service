@@ -29,16 +29,10 @@ async function bootstrap() {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  // const yamlStr = yaml.dump(document);
-  // fs.writeFile('./doc/api.yaml', yamlStr, (err) => {
-  //   if (err) {
-  //     console.error('Error writing file:', err);
-  //   }
-  // });
 
-  SwaggerModule.setup('api', app, document);
+  SwaggerModule.setup('doc', app, document);
 
   await app.listen(port);
-  console.log(`Swagger API is accessible on http://localhost:${port}/api`);
+  console.log(`Swagger API is accessible on http://localhost:${port}/doc`);
 }
 bootstrap();
