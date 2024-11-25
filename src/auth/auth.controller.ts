@@ -23,7 +23,17 @@ export class AuthController {
       this.logger.log(createLogMessage(request, 'user', '201'));
     }
     this.logger.verbose('Finished');
-    console.log(registeredUser)
     return registeredUser;
+  }
+
+  @Post('login')
+  async login(@Req() request: Request, @Body() createUserDto: CreateUserDto) {
+    this.logger.verbose('Start logging process...');
+    const loggedUser = await this.authService.login(createUserDto);
+    // if (loggedUser) {
+    //   this.logger.log(createLogMessage(request, 'user', '200'));
+    // }
+    this.logger.verbose('Finished');
+    return loggedUser;
   }
 }

@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Artist, ArtistClass } from './artist.interface';
 import { ArtistService } from './artist.service';
@@ -22,8 +23,10 @@ import {
 import { CustomLogger } from 'src/logger/logger.service';
 import createLogMessage from 'src/service/createLogMessage';
 import { Request } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Artist instance')
+@UseGuards(AuthGuard)
 @Controller('artist')
 export class ArtistController {
   constructor(

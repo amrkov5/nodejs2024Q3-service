@@ -11,6 +11,7 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  //url = env("DATABASE_MIGRATE_URL")
 }
 
 model User {
@@ -53,4 +54,10 @@ model Favorites {
   id String @default(uuid())
   type String 
   favId String @id
+}
+
+model Auth {
+  userId String @id
+  accessToken String
+  refreshToken String
 }

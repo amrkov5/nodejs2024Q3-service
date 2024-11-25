@@ -24,6 +24,7 @@ import {
 import { CustomLogger } from 'src/logger/logger.service';
 import { Request, Response } from 'express';
 import createLogMessage from 'src/service/createLogMessage';
+import { AuthService } from 'src/auth/auth.service';
 
 @ApiTags('User instance')
 @Controller('user')
@@ -31,6 +32,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly logger: CustomLogger,
+    private readonly authService: AuthService,
   ) {}
 
   @Get()
@@ -73,30 +75,30 @@ export class UserController {
     return resp;
   }
 
-  // @Post()
-  // @ApiOperation({ summary: 'Create new user' })
-  // @ApiBody({ type: CreateUserDto })
-  // @ApiResponse({
-  //   status: 201,
-  //   description: 'User created successfully.',
-  //   type: ReturnedUserClass,
-  // })
-  // @ApiResponse({
-  //   status: 400,
-  //   description: 'Body is invalid.',
-  // })
-  // async createUser(
-  //   @Req() request: Request,
-  //   @Body() createUserDto: CreateUserDto,
-  // ): Promise<ReturnedUser> {
-  //   this.logger.verbose('Start creating user...');
-  //   const resp = await this.userService.createUser(createUserDto);
-  //   if (resp) {
-  //     this.logger.log(createLogMessage(request, 'user', '201'));
-  //   }
-  //   this.logger.verbose('Finished');
-  //   return resp;
-  // }
+  @Post()
+  @ApiOperation({ summary: 'Create new user' })
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({
+    status: 201,
+    description: 'User created successfully.',
+    type: ReturnedUserClass,
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Body is invalid.',
+  })
+  async createUser(
+    @Req() request: Request,
+    @Body() createUserDto: CreateUserDto,
+  ): Promise<ReturnedUser> {
+    this.logger.verbose('Start creating user...');
+    const resp = await this.authService.signup(createUserDto);
+    if (resp) {
+      this.logger.log(createLogMessage(request, 'user', '201'));
+    }
+    this.logger.verbose('Finished');
+    return resp;
+  }
 
   @Put(':id')
   @ApiOperation({ summary: "Update user's password" })
@@ -119,7 +121,7 @@ export class UserController {
     @Param('id') id: string,
   ): Promise<ReturnedUser> {
     this.logger.verbose('Start updating user...');
-    const resp = await this.userService.updatePassword(updatePasswordDto, id);
+    const resp = await this.authService.updatePassword(id, updatePasswordDto);
     if (resp) {
       this.logger.log(createLogMessage(request, 'user', '200'));
     }

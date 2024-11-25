@@ -37,6 +37,12 @@ ENV PORT=4000
 
 ENV DATABASE_URL="postgresql://musicLover:libraryRSS@postgres:5432/library?schema=public"
 
+RUN mkdir -p /var/log/web/ml && chmod 777 /var/log/web/ml
+
+RUN touch /var/log/web/ml/log-$(date +%Y-%m-%dT%H:%M:%S)
+
+RUN touch /var/log/web/ml/error-$(date +%Y-%m-%dT%H:%M:%S)
+
 WORKDIR /nodejs2024Q3-service
 
 COPY --from=build /nodejs2024Q3-service/dist ./dist

@@ -25,7 +25,7 @@ export class CustomLogger implements LoggerService {
     const pathToFile = path.join(this.pathToLogs, fileName);
 
     fs.stat(pathToFile, (err, stats) => {
-      if (stats.size >= Number(process.env.LOG_FILE_SIZE)) {
+      if (stats.size >= Number(process.env.LOG_FILE_SIZE) * 1024) {
         fileName = `${type}-${new Date().toISOString()}`;
       }
       const writeStream = fs.createWriteStream(

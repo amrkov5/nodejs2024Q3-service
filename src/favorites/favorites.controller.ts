@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
 import {
@@ -16,8 +17,10 @@ import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomLogger } from 'src/logger/logger.service';
 import createLogMessage from 'src/service/createLogMessage';
 import { Request } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Favorites instance')
+@UseGuards(AuthGuard)
 @Controller('favs')
 export class FavoritesController {
   constructor(

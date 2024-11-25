@@ -16,5 +16,6 @@ config();
   ],
   controllers: [AuthController],
   providers: [AuthService, PrismaService, CustomLogger],
+  exports: [AuthService],
 })
 export class AuthModule {}

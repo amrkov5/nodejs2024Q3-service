@@ -9,6 +9,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { isUUID } from 'class-validator';
 import { UpdatePasswordDto } from './dto/update-password.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UserService {

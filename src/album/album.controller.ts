@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { Album, AlbumClass } from './album.interface';
 import { AlbumService } from './album.service';
@@ -22,8 +23,10 @@ import {
 import { CustomLogger } from 'src/logger/logger.service';
 import createLogMessage from 'src/service/createLogMessage';
 import { Request } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Album instance')
+@UseGuards(AuthGuard)
 @Controller('album')
 export class AlbumController {
   constructor(
