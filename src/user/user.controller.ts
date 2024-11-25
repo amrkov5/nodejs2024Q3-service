@@ -9,6 +9,7 @@ import {
   Put,
   Req,
   Res,
+  UseGuards,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ReturnedUser, ReturnedUserClass } from './user.interface';
@@ -25,8 +26,10 @@ import { CustomLogger } from 'src/logger/logger.service';
 import { Request, Response } from 'express';
 import createLogMessage from 'src/service/createLogMessage';
 import { AuthService } from 'src/auth/auth.service';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('User instance')
+@UseGuards(AuthGuard)
 @Controller('user')
 export class UserController {
   constructor(

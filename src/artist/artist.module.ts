@@ -3,9 +3,10 @@ import { ArtistService } from './artist.service';
 import { ArtistController } from './artist.controller';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CustomLogger } from 'src/logger/logger.service';
+import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
-  imports: [],
+  imports: [AuthModule],
   controllers: [ArtistController],
   providers: [ArtistService, PrismaService, CustomLogger],
 })

@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   Req,
+  UseGuards,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { Track, TrackClass } from './track.interface';
@@ -22,8 +23,10 @@ import {
 import { CustomLogger } from 'src/logger/logger.service';
 import createLogMessage from 'src/service/createLogMessage';
 import { Request } from 'express';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @ApiTags('Track instance')
+@UseGuards(AuthGuard)
 @Controller('track')
 export class TrackController {
   constructor(
